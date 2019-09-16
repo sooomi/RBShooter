@@ -22,7 +22,9 @@ void APlayerCharacter::BeginPlay()
 	CachedMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
 	
 	TArray<UActorComponent*> Components = GetComponentsByTag(UChildActorComponent::StaticClass(), "Weapon");
-	CachedWeaponActor = Cast<AWeapon>(Components[0]);
+	UChildActorComponent* ActorComponent = Cast<UChildActorComponent>(Components[0]);
+	
+	CachedWeaponActor = Cast<AWeapon>(ActorComponent->GetChildActor());
 }
 
 // Called every frame
