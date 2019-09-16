@@ -27,6 +27,11 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private: // Camera
+
+	UPROPERTY(EditAnywhere, Category = "Camera")
+	float CameraLookSensitivity;
+
 private: // Movement
 
 	FVector MovementInput;
