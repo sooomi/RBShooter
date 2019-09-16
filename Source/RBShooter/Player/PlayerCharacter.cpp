@@ -2,8 +2,9 @@
 
 #include "PlayerCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Components/InputComponent.h"
 #include "Gameframework/CharacterMovementComponent.h"
+#include "Components/InputComponent.h"
+#include "Weapon.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -19,6 +20,9 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	CachedMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
+	
+	TArray<UActorComponent*> Components = GetComponentsByTag(UChildActorComponent::StaticClass(), "Weapon");
+	CachedWeaponActor = Cast<AWeapon>(Components[0]);
 }
 
 // Called every frame
@@ -71,3 +75,11 @@ void APlayerCharacter::InputCallback_LookUpDown(float Axis)
 	AddControllerPitchInput(Axis * CameraLookSensitivity);
 }
 
+void APlayerCharacter::InputCallback_FireRedProjectile()
+{
+
+}
+
+void APlayerCharacter::InputCallback_FireBlueProjectile()
+{
+}

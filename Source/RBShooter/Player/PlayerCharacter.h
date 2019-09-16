@@ -7,6 +7,7 @@
 #include "PlayerCharacter.generated.h"
 
 class UCharacterMovementComponent;
+class AWeapon;
 
 UCLASS()
 class RBSHOOTER_API APlayerCharacter : public ACharacter
@@ -40,11 +41,21 @@ private: // Movement
 
 	void MoveFromInput();
 
+private: // Weapon
+
+	AWeapon* CachedWeaponActor;
+
 private: // Input callbacks
 
+	// Movement
 	void InputCallback_MoveLeftRight(float Axis);
 	void InputCallback_MoveForwardBack(float Axis);
 
+	// Camera movement
 	void InputCallback_LookLeftRight(float Axis);
 	void InputCallback_LookUpDown(float Axis);
+
+	// Weapon actions
+	void InputCallback_FireRedProjectile();
+	void InputCallback_FireBlueProjectile();
 };
