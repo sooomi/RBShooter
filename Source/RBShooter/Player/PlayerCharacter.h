@@ -7,6 +7,7 @@
 #include "PlayerCharacter.generated.h"
 
 class UCharacterMovementComponent;
+class UChildActorComponent;
 class AWeapon;
 
 UCLASS()
@@ -30,8 +31,8 @@ public:
 
 public:
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	class UChildActorComponent* WeaponChildComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UChildActorComponent* WeaponChildComponent;
 
 private: // Camera
 

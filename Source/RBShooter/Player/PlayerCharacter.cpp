@@ -12,7 +12,6 @@ APlayerCharacter::APlayerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	WeaponChildComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("WeaponTest"));
-	WeaponChildComponent->bEditableWhenInherited = true;
 
 	CameraLookSensitivity = 1.0f;
 }
@@ -23,11 +22,8 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	CachedMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
-	
-	TArray<UActorComponent*> Components = GetComponentsByTag(UChildActorComponent::StaticClass(), "Weapon");
-	UChildActorComponent* ActorComponent = Cast<UChildActorComponent>(Components[0]);
-	
-	CachedWeaponActor = Cast<AWeapon>(ActorComponent->GetChildActor());
+
+	CachedWeaponActor = Cast<AWeapon>(WeaponChildComponent->GetChildActor());
 }
 
 // Called every frame
