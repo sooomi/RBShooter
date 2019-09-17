@@ -2,6 +2,7 @@
 
 
 #include "ProjectileBase.h"
+#include "Gameframework/ProjectileMovementComponent.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -25,3 +26,7 @@ void AProjectileBase::Tick(float DeltaTime)
 
 }
 
+void AProjectileBase::Fire(FVector Direction)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *Direction.ToString());
+}

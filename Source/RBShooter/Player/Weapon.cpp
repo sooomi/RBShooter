@@ -2,6 +2,12 @@
 
 
 #include "Weapon.h"
+#include "PlayerCharacter.h"
+#include "Combat/ProjectileBase.h"
+
+#include "Kismet/GameplayStatics.h"
+#include "Gameframework/Character.h"
+#include "Engine/World.h"
 
 AWeapon::AWeapon()
 {
@@ -15,6 +21,8 @@ AWeapon::AWeapon()
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CachedPlayerOwner = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	
 }
 
@@ -25,16 +33,10 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
-bool AWeapon::FireProjectileRed(float ChargeAmount)
+bool AWeapon::TryToFireProjectile(EProjectileTypes ProjectileType, float ChargeAmount)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Fire Red Projectile, Charge amount %f"), ChargeAmount);
-
-	return true;
-}
-
-bool AWeapon::FireProjectileBlue(float ChargeAmount)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Fire Blue Projectile, Charge amount %f"), ChargeAmount);
+	// TODO check ammo amount and fire rate CD first
+	OnWantsToFireProjectile(ProjectileType, ChargeAmount);
 
 	return true;
 }

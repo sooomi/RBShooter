@@ -11,8 +11,6 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	WeaponChildComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("WeaponTest"));
-
 	CameraLookSensitivity = 1.0f;
 }
 
@@ -22,8 +20,6 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	CachedMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
-
-	CachedWeaponActor = Cast<AWeapon>(WeaponChildComponent->GetChildActor());
 }
 
 // Called every frame

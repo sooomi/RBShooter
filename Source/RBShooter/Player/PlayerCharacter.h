@@ -29,10 +29,10 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-public:
+public: // Weapon
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UChildActorComponent* WeaponChildComponent;
+	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
+	AWeapon* WeaponActor;
 
 private: // Camera
 
@@ -46,10 +46,6 @@ private: // Movement
 	UCharacterMovementComponent* CachedMovementComponent;
 
 	void MoveFromInput();
-
-private: // Weapon
-
-	AWeapon* CachedWeaponActor;
 
 private: // Input callbacks
 

@@ -13,6 +13,8 @@ enum class EProjectileTypes : uint8
 	PT_Blue UMETA(DisplayName = "Blue")
 };
 
+class UProjectileMovementComponent;
+
 UCLASS()
 class RBSHOOTER_API AProjectileBase : public AActor
 {
@@ -32,6 +34,9 @@ public:
 
 
 public:
+
+	UFUNCTION(BlueprintCallable, Category="Projectile")
+	void Fire(FVector Direction);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	EProjectileTypes ProjectileType;

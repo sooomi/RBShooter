@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Combat/ProjectileBase.h"
 #include "Weapon.generated.h"
+
+class APlayerCharacter;
 
 UCLASS()
 class RBSHOOTER_API AWeapon : public AActor
@@ -23,15 +26,19 @@ public:
 	
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable, Category="Weapon Fire")
-	bool FireProjectileRed(float ChargeAmount);
-
 	UFUNCTION(BlueprintCallable, Category = "Weapon Fire")
-	bool FireProjectileBlue(float ChargeAmount);
+	bool TryToFireProjectile(EProjectileTypes ProjectileType, float ChargeAmount);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Fire")
+	void OnWantsToFireProjectile(EProjectileTypes ProjectileType, float ChargeAmount);
 
 private:
 
 	UPROPERTY(EditAnywhere, Category="Weapon Fire")
 	float RateOfFire;
+	
+private:
+
+	APlayerCharacter* CachedPlayerOwner;
 
 };
