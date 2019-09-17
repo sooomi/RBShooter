@@ -7,6 +7,7 @@
 #include "PlayerCharacter.generated.h"
 
 class UCharacterMovementComponent;
+class UChildActorComponent;
 class AWeapon;
 
 UCLASS()
@@ -27,6 +28,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+public:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UChildActorComponent* WeaponChildComponent;
 
 private: // Camera
 

@@ -11,6 +11,8 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	WeaponChildComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("WeaponTest"));
+
 	CameraLookSensitivity = 1.0f;
 }
 
@@ -20,11 +22,8 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	CachedMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
-	
-	TArray<UActorComponent*> Components = GetComponentsByTag(UChildActorComponent::StaticClass(), "Weapon");
-	UChildActorComponent* ActorComponent = Cast<UChildActorComponent>(Components[0]);
-	
-	CachedWeaponActor = Cast<AWeapon>(ActorComponent->GetChildActor());
+
+	CachedWeaponActor = Cast<AWeapon>(WeaponChildComponent->GetChildActor());
 }
 
 // Called every frame
@@ -39,6 +38,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	// Bind weapon actions
+	PlayerInputComponent->BindAction(TEXT("FireProjectileRed"), IE_Pressed, this, &APlayerCharacter::InputCallback_FireRedProjectile);
+	PlayerInputComponent->BindAction(TEXT("FireProjectileBlue"), IE_Pressed, this, &APlayerCharacter::InputCallback_FireBlueProjectile);
 
 	// Bind axis actions
 	PlayerInputComponent->BindAxis(TEXT("MoveLeftRight"), this, &APlayerCharacter::InputCallback_MoveLeftRight);
@@ -79,9 +82,10 @@ void APlayerCharacter::InputCallback_LookUpDown(float Axis)
 
 void APlayerCharacter::InputCallback_FireRedProjectile()
 {
-
+	// The firing of the projectile is handled in blueprints
 }
 
 void APlayerCharacter::InputCallback_FireBlueProjectile()
 {
+	// The firing of the projectile is handled in blueprints
 }

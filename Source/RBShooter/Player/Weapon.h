@@ -24,10 +24,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category="Weapon Fire")
-	bool FireProjectile_Red(float ChargeAmount);
+	bool FireProjectileRed(float ChargeAmount);
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Fire")
-	bool FireProjectile_Blue(float ChargeAmount);
+	bool FireProjectileBlue(float ChargeAmount);
 
 private:
 
