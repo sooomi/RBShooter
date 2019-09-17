@@ -6,6 +6,13 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+UENUM(BlueprintType)
+enum class EProjectileTypes : uint8
+{
+	PT_Red UMETA(DisplayName="Red"),
+	PT_Blue UMETA(DisplayName = "Blue")
+};
+
 UCLASS()
 class RBSHOOTER_API AWeapon : public AActor
 {
@@ -24,10 +31,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category="Weapon Fire")
-	bool FireProjectile_Red(float ChargeAmount);
+	bool FireProjectileRed(float ChargeAmount);
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Fire")
-	bool FireProjectile_Blue(float ChargeAmount);
+	bool FireProjectileBlue(float ChargeAmount);
 
 private:
 

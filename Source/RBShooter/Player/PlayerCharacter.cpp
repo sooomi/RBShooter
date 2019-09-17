@@ -40,6 +40,10 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// Bind weapon actions
+	PlayerInputComponent->BindAction(TEXT("FireProjectileRed"), IE_Pressed, this, &APlayerCharacter::InputCallback_FireRedProjectile);
+	PlayerInputComponent->BindAction(TEXT("FireProjectileBlue"), IE_Pressed, this, &APlayerCharacter::InputCallback_FireBlueProjectile);
+
 	// Bind axis actions
 	PlayerInputComponent->BindAxis(TEXT("MoveLeftRight"), this, &APlayerCharacter::InputCallback_MoveLeftRight);
 	PlayerInputComponent->BindAxis(TEXT("MoveForwardBack"), this, &APlayerCharacter::InputCallback_MoveForwardBack);
@@ -79,9 +83,10 @@ void APlayerCharacter::InputCallback_LookUpDown(float Axis)
 
 void APlayerCharacter::InputCallback_FireRedProjectile()
 {
-
+	// The firing of the projectile is handled in blueprints
 }
 
 void APlayerCharacter::InputCallback_FireBlueProjectile()
 {
+	// The firing of the projectile is handled in blueprints
 }

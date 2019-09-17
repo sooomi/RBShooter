@@ -25,14 +25,14 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
-bool AWeapon::FireProjectile_Red(float ChargeAmount)
+bool AWeapon::FireProjectileRed(float ChargeAmount)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Fire Red Projectile, Charge amount %f"), ChargeAmount);
 
 	return true;
 }
 
-bool AWeapon::FireProjectile_Blue(float ChargeAmount)
+bool AWeapon::FireProjectileBlue(float ChargeAmount)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Fire Blue Projectile, Charge amount %f"), ChargeAmount);
 
