@@ -41,4 +41,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	EProjectileTypes ProjectileType;
 
+private:
+
+	UProjectileMovementComponent* CachedProjectileComponent;
+
 };

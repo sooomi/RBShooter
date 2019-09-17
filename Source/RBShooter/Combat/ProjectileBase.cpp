@@ -16,6 +16,8 @@ AProjectileBase::AProjectileBase()
 void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CachedProjectileComponent = Cast<UProjectileMovementComponent>(GetComponentByClass(UProjectileMovementComponent::StaticClass()));
 	
 }
 
@@ -28,5 +30,5 @@ void AProjectileBase::Tick(float DeltaTime)
 
 void AProjectileBase::Fire(FVector Direction)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *Direction.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Setting dir to %s"), *Direction.ToString());
 }

@@ -22,6 +22,8 @@ void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// TODO there should be a better way to get the player pointer
+	// since this class instance is in a child hierarchy where parent is the player
 	CachedPlayerOwner = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	
 }
