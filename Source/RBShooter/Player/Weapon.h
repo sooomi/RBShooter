@@ -6,13 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
-UENUM(BlueprintType)
-enum class EProjectileTypes : uint8
-{
-	PT_Red UMETA(DisplayName="Red"),
-	PT_Blue UMETA(DisplayName = "Blue")
-};
-
 UCLASS()
 class RBSHOOTER_API AWeapon : public AActor
 {
