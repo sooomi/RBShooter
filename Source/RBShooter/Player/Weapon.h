@@ -27,15 +27,21 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Fire")
-	bool TryToFireProjectile(EProjectileTypes ProjectileType, float ChargeAmount);
+	bool TryToFireProjectile(EColorTypes ProjectileType, float ChargeAmount);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Fire")
-	void OnWantsToFireProjectile(EProjectileTypes ProjectileType, float ChargeAmount);
+	void OnFireProjectileConfirmed(EColorTypes ProjectileType, float ChargeAmount);
 
-private:
+private: // Rate of fire
 
 	UPROPERTY(EditAnywhere, Category="Weapon Fire")
 	float RateOfFire;
+
+	FTimerHandle RoFTimerHandle;
+
+	bool bCanFire;
+
+	void RateOfFireUpdate();
 	
 private:
 

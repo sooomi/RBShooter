@@ -4,15 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameUtility.h"
 #include "ProjectileBase.generated.h"
-
-UENUM(BlueprintType)
-enum class EProjectileTypes : uint8
-{
-	PT_None UMETA(DisplayName="None"),
-	PT_Red UMETA(DisplayName = "Red"),
-	PT_Blue UMETA(DisplayName = "Blue")
-};
 
 class UProjectileMovementComponent;
 class USphereComponent;
@@ -40,7 +33,10 @@ public:
 	// Called from weapon blueprint when this actor
 	// is spawned in the world
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	virtual void OnProjectileFired();
+	void Fire();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Projectile")
+	void OnProjectileFired();
 
 	UFUNCTION()
 	virtual void OnProjectileHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -48,7 +44,10 @@ public:
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
-	EProjectileTypes ProjectileType;
+	EColorTypes ProjectileType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
+	float MaxLifeTime;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USphereComponent* EditorSphereComponent;
@@ -56,10 +55,16 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UProjectileMovementComponent* EditorProjectileComponent;
 
-protected:
+protected: // Inherited components
 
 	UProjectileMovementComponent* CachedProjectileComponent;
 
 	USphereComponent* CachedSphereComponent;
+
+private:
+
+	FTimerHandle LifeTimeTimerHandle;
+
+	void LifeTimeUpdate();
 
 };
