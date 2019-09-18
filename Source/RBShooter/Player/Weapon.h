@@ -32,10 +32,16 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Fire")
 	void OnFireProjectileConfirmed(EProjectileTypes ProjectileType, float ChargeAmount);
 
-private:
+private: // Rate of fire
 
 	UPROPERTY(EditAnywhere, Category="Weapon Fire")
 	float RateOfFire;
+
+	FTimerHandle RoFTimerHandle;
+
+	bool bCanFire;
+
+	void RateOfFireUpdate();
 	
 private:
 
