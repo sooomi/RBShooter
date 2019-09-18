@@ -26,7 +26,6 @@ void AProjectileBase::BeginPlay()
 	CachedProjectileComponent = Cast<UProjectileMovementComponent>(GetComponentByClass(UProjectileMovementComponent::StaticClass()));
 
 	CachedSphereComponent = Cast<USphereComponent>(GetComponentByClass(USphereComponent::StaticClass()));
-
 	CachedSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectileBase::OnProjectileHit);
 }
 
@@ -37,9 +36,9 @@ void AProjectileBase::Tick(float DeltaTime)
 
 }
 
-void AProjectileBase::OnProjectileFired()
+void AProjectileBase::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Projectile Fired"));
+	OnProjectileFired();
 }
 
 void AProjectileBase::OnProjectileHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
