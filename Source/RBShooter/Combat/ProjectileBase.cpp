@@ -16,8 +16,6 @@ AProjectileBase::AProjectileBase()
 
 	RootComponent = EditorSphereComponent;
 
-	EditorSphereComponent->OnComponentHit.AddDynamic(this, &AProjectileBase::OnProjectileHit);
-
 }
 
 // Called when the game starts or when spawned
@@ -28,6 +26,8 @@ void AProjectileBase::BeginPlay()
 	CachedProjectileComponent = Cast<UProjectileMovementComponent>(GetComponentByClass(UProjectileMovementComponent::StaticClass()));
 
 	CachedSphereComponent = Cast<USphereComponent>(GetComponentByClass(USphereComponent::StaticClass()));
+
+	CachedSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectileBase::OnProjectileHit);
 }
 
 // Called every frame
@@ -42,7 +42,7 @@ void AProjectileBase::OnProjectileFired()
 	UE_LOG(LogTemp, Warning, TEXT("Projectile Fired"));
 }
 
-void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AProjectileBase::OnProjectileHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Projectile Collision"));
 }
