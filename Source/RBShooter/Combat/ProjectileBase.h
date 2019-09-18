@@ -53,16 +53,25 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	EProjectileTypes ProjectileType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
+	float MaxLifeTime;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USphereComponent* EditorSphereComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UProjectileMovementComponent* EditorProjectileComponent;
 
-protected:
+protected: // Inherited components
 
 	UProjectileMovementComponent* CachedProjectileComponent;
 
 	USphereComponent* CachedSphereComponent;
+
+private:
+
+	FTimerHandle LifeTimeTimerHandle;
+
+	void LifeTimeUpdate();
 
 };

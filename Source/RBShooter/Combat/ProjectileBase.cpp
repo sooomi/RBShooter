@@ -4,6 +4,7 @@
 #include "ProjectileBase.h"
 #include "Gameframework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "TimerManager.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -16,6 +17,7 @@ AProjectileBase::AProjectileBase()
 
 	RootComponent = EditorSphereComponent;
 
+	MaxLifeTime = 20.0f;
 }
 
 // Called when the game starts or when spawned
@@ -27,6 +29,9 @@ void AProjectileBase::BeginPlay()
 
 	CachedSphereComponent = Cast<USphereComponent>(GetComponentByClass(USphereComponent::StaticClass()));
 	CachedSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectileBase::OnProjectileHit);
+
+	// Lifetime timer
+	GetWorldTimerManager().SetTimer(LifeTimeTimerHandle, this, &AProjectileBase::LifeTimeUpdate, MaxLifeTime, false, -1.0f);
 }
 
 // Called every frame
@@ -44,4 +49,10 @@ void AProjectileBase::Fire()
 void AProjectileBase::OnProjectileHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Projectile Collision"));
+}
+
+void AProjectileBase::LifeTimeUpdate()
+{
+	Destroy();
+	UE_LOG(LogTemp, Warning, TEXT("Projectile destroyed due to lifetime"));
 }
