@@ -4,15 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameUtility.h"
 #include "ProjectileBase.generated.h"
-
-UENUM(BlueprintType)
-enum class EProjectileTypes : uint8
-{
-	PT_None UMETA(DisplayName="None"),
-	PT_Red UMETA(DisplayName = "Red"),
-	PT_Blue UMETA(DisplayName = "Blue")
-};
 
 class UProjectileMovementComponent;
 class USphereComponent;
@@ -51,7 +44,7 @@ public:
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
-	EProjectileTypes ProjectileType;
+	EColorTypes ProjectileType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	float MaxLifeTime;

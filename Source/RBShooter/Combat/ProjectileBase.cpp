@@ -5,6 +5,7 @@
 #include "Gameframework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "TimerManager.h"
+#include "Enemy/EnemyBase.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -48,7 +49,15 @@ void AProjectileBase::Fire()
 
 void AProjectileBase::OnProjectileHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Projectile Collision"));
+	AEnemyBase* EnemyActor = Cast<AEnemyBase>(OtherActor);
+	if (EnemyActor)
+	{
+		EnemyActor->OnProjectileHit(this);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Projectile Collision with no enemy"));
+	}
 }
 
 void AProjectileBase::LifeTimeUpdate()

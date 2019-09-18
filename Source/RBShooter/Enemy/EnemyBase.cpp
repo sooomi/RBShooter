@@ -2,7 +2,8 @@
 
 
 #include "EnemyBase.h"
-#include "Gameframework/CharacterMovementComponent.h"
+#include "Gameframework/MovementComponent.h"
+#include "Combat/ProjectileBase.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -10,7 +11,7 @@ AEnemyBase::AEnemyBase()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
-	EditorCharacterMovement = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("CharacterMovement"));
+	EditorMovement = CreateDefaultSubobject<UMovementComponent>(TEXT("Movement"));
 }
 
 // Called when the game starts or when spawned
@@ -32,5 +33,17 @@ void AEnemyBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AEnemyBase::OnProjectileHit(AProjectileBase* Projectile)
+{
+	if (Projectile->ProjectileType == EnemyType) // Colors match
+	{
+		OnProjectileHitEnemy(Projectile, true);
+	}
+	else // Colors don't match
+	{
+		OnProjectileHitEnemy(Projectile, false);
+	}
 }
 

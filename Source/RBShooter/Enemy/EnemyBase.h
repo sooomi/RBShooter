@@ -4,17 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameUtility.h"
 #include "EnemyBase.generated.h"
 
-UENUM(BlueprintType)
-enum class EEnemyTypes : uint8
-{
-	ET_None UMETA(DisplayName = "None"),
-	ET_Red UMETA(DisplayName="Red Enemy"),
-	ET_Blue UMETA(DisplayName = "Blue Enemy")
-};
-
-class UCharacterMovementComponent;
+class UMovementComponent;
+class AProjectileBase;
 
 UCLASS()
 class RBSHOOTER_API AEnemyBase : public APawn
@@ -36,12 +30,17 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void OnProjectileHit(AProjectileBase* Projectile);
+
 public:
 
+	UFUNCTION(BlueprintImplementableEvent, Category="Enemy Combat")
+	void OnProjectileHitEnemy(AProjectileBase* Projectile, bool bColorMatch);
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UCharacterMovementComponent* EditorCharacterMovement;
+	UMovementComponent* EditorMovement;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Enemy Basic")
-	EEnemyTypes EnemyType;
+	EColorTypes EnemyType;
 
 };

@@ -27,10 +27,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon Fire")
-	bool TryToFireProjectile(EProjectileTypes ProjectileType, float ChargeAmount);
+	bool TryToFireProjectile(EColorTypes ProjectileType, float ChargeAmount);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Fire")
-	void OnFireProjectileConfirmed(EProjectileTypes ProjectileType, float ChargeAmount);
+	void OnFireProjectileConfirmed(EColorTypes ProjectileType, float ChargeAmount);
 
 private: // Rate of fire
 

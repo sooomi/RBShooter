@@ -38,7 +38,7 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
-bool AWeapon::TryToFireProjectile(EProjectileTypes ProjectileType, float ChargeAmount)
+bool AWeapon::TryToFireProjectile(EColorTypes ProjectileType, float ChargeAmount)
 {
 	// TODO check ammo amount
 	if (bCanFire)
