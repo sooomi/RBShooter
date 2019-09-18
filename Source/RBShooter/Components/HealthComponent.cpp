@@ -34,7 +34,6 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
 }
 
 void UHealthComponent::AddHealth(int32 Health, AActor* InvokeActor)
@@ -42,7 +41,7 @@ void UHealthComponent::AddHealth(int32 Health, AActor* InvokeActor)
 	CurrentHealth += Health;
 
 	ClampHealth();
-	OnHealthAdded(Health, InvokeActor);
+	OnHealthAdded.Broadcast(Health, InvokeActor);
 
 	if (CurrentHealth <= 0)
 	{
@@ -55,7 +54,7 @@ void UHealthComponent::RemoveHealth(int32 Health, AActor* InvokeActor)
 	CurrentHealth -= Health;
 
 	ClampHealth();
-	OnHealthRemoved(Health, InvokeActor);
+	OnHealthRemoved.Broadcast(Health, InvokeActor);
 
 	if (CurrentHealth <= 0)
 	{
@@ -70,7 +69,7 @@ void UHealthComponent::Kill(AActor* InvokeActor)
 		CurrentHealth = 0;
 		bIsDead = true;
 
-		OnDeath(InvokeActor);
+		OnDeath.Broadcast(InvokeActor);
 	}
 }
 
@@ -82,8 +81,7 @@ void UHealthComponent::Revive(int32 ReviveStartHealth, AActor* InvokeActor)
 		bIsDead = false;
 
 		ClampHealth();
-
-		OnRevive(StartHealth, InvokeActor);
+		OnRevive.Broadcast(StartHealth, InvokeActor);
 	}
 }
 

@@ -6,6 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealthAddedDelegate, int32, Health, AActor*, InvokeActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealthRemovedDelegate, int32, Health, AActor*, InvokeActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeathDelegate, AActor*, InvokeActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FReviveDelegate, int32, ReviveHealth, AActor*, InvokeActor);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RBSHOOTER_API UHealthComponent : public UActorComponent
@@ -24,24 +28,31 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable, Category="Health Functions")
 	void AddHealth(int32 Health, AActor* InvokeActor = nullptr);
+
+	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void RemoveHealth(int32 Health, AActor* InvokeActor = nullptr);
+
+	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void Kill(AActor* InvokeActor = nullptr);
+
+	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void Revive(int32 ReviveStartHealth, AActor* InvokeActor = nullptr);
 
 public: // Blueprint-specific events
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Health Event")
-	void OnHealthAdded(int32 Amount, AActor* InvokeActor = nullptr);
+	UPROPERTY(BlueprintAssignable, Category = "Health Event")
+	FHealthAddedDelegate OnHealthAdded;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Health Event")
-	void OnHealthRemoved(int32 Amount, AActor* InvokeActor = nullptr);
+	UPROPERTY(BlueprintAssignable, Category = "Health Event")
+	FHealthRemovedDelegate OnHealthRemoved;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Health Event")
-	void OnDeath(AActor* InvokeActor = nullptr);
+	UPROPERTY(BlueprintAssignable, Category = "Health Event")
+	FDeathDelegate OnDeath;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Health Event")
-	void OnRevive(int32 ReviveStartHealth, AActor* InvokeActor = nullptr);
+	UPROPERTY(BlueprintAssignable, Category = "Health Event")
+	FReviveDelegate OnRevive;
 
 public:
 
