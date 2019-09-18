@@ -38,7 +38,7 @@ void AWeapon::Tick(float DeltaTime)
 bool AWeapon::TryToFireProjectile(EProjectileTypes ProjectileType, float ChargeAmount)
 {
 	// TODO check ammo amount and fire rate CD first
-	OnWantsToFireProjectile(ProjectileType, ChargeAmount);
+	OnFireProjectileConfirmed(ProjectileType, ChargeAmount);
 
 	return true;
 }

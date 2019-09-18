@@ -30,7 +30,7 @@ public:
 	bool TryToFireProjectile(EProjectileTypes ProjectileType, float ChargeAmount);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Fire")
-	void OnWantsToFireProjectile(EProjectileTypes ProjectileType, float ChargeAmount);
+	void OnFireProjectileConfirmed(EProjectileTypes ProjectileType, float ChargeAmount);
 
 private:
 
