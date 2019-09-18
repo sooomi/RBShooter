@@ -30,12 +30,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void OnProjectileHit(AProjectileBase* Projectile);
-
 public:
-
-	UFUNCTION(BlueprintImplementableEvent, Category="Enemy Combat")
-	void OnProjectileHitEnemy(AProjectileBase* Projectile, bool bColorMatch);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UMovementComponent* EditorMovement;

@@ -35,15 +35,4 @@ void AEnemyBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 }
 
-void AEnemyBase::OnProjectileHit(AProjectileBase* Projectile)
-{
-	if (Projectile->ProjectileType == EnemyType) // Colors match
-	{
-		OnProjectileHitEnemy(Projectile, true);
-	}
-	else // Colors don't match
-	{
-		OnProjectileHitEnemy(Projectile, false);
-	}
-}
 

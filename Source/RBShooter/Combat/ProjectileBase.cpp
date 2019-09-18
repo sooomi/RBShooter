@@ -52,7 +52,14 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* OverlappedComponent, 
 	AEnemyBase* EnemyActor = Cast<AEnemyBase>(OtherActor);
 	if (EnemyActor)
 	{
-		EnemyActor->OnProjectileHit(this);
+		if (EnemyActor->EnemyType == ProjectileType) // Colors match
+		{
+			OnProjectileHitEnemy(EnemyActor, true);
+		}
+		else // Colors don't match
+		{
+			OnProjectileHitEnemy(EnemyActor, false);
+		}
 	}
 	else
 	{
