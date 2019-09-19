@@ -26,11 +26,26 @@ public:
 	
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category="Weapon Fire")
+	bool LoadProjectile(EColorTypes ProjectileType);
+
 	UFUNCTION(BlueprintCallable, Category = "Weapon Fire")
-	bool TryToFireProjectile(EColorTypes ProjectileType, float ChargeAmount);
+	bool ReleaseProjectile(EColorTypes ProjectileType);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Fire")
 	void OnFireProjectileConfirmed(EColorTypes ProjectileType, float ChargeAmount);
+
+private: // Weapon charging
+
+	UPROPERTY(EditAnywhere, Category="Weapon Charging")
+	float MaxChargeDuration;
+
+	FTimerHandle ChargeTimerHandle;
+
+	bool bIsChargingWeapon;
+
+	void SetChargeTimer();
+	void ChargeUpdate();
 
 private: // Rate of fire
 
@@ -46,5 +61,9 @@ private: // Rate of fire
 private:
 
 	APlayerCharacter* CachedPlayerOwner;
+
+	EColorTypes ProjectileTypeToFire;
+
+	bool TryToFireProjectile(EColorTypes ProjectileType);
 
 };

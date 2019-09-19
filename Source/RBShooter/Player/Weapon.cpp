@@ -16,6 +16,9 @@ AWeapon::AWeapon()
 
 	RateOfFire = 0.2f;
 	bCanFire = true;
+
+	MaxChargeDuration = 3.0f;
+	bIsChargingWeapon = false;
 }
 
 // Called when the game starts or when spawned
@@ -35,14 +38,42 @@ void AWeapon::BeginPlay()
 void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-bool AWeapon::TryToFireProjectile(EColorTypes ProjectileType, float ChargeAmount)
+bool AWeapon::LoadProjectile(EColorTypes ProjectileType)
+{
+	if (!bIsChargingWeapon)
+	{
+		ProjectileTypeToFire = ProjectileType;
+		SetChargeTimer();
+		bIsChargingWeapon = true;
+
+		return true;
+	}
+
+	return false;
+}
+
+bool AWeapon::ReleaseProjectile(EColorTypes ProjectileType)
+{
+	if (bIsChargingWeapon && ProjectileType == ProjectileTypeToFire)
+	{
+		TryToFireProjectile(ProjectileTypeToFire);
+		GetWorldTimerManager().PauseTimer(ChargeTimerHandle);
+		bIsChargingWeapon = false;
+
+		return true;
+	}
+
+	return false;
+}
+
+bool AWeapon::TryToFireProjectile(EColorTypes ProjectileType)
 {
 	// TODO check ammo amount
 	if (bCanFire)
 	{
+		float ChargeAmount = FMath::Max(0.0f, GetWorldTimerManager().GetTimerElapsed(ChargeTimerHandle));
 		OnFireProjectileConfirmed(ProjectileType, ChargeAmount);
 		bCanFire = false;
 
@@ -52,8 +83,21 @@ bool AWeapon::TryToFireProjectile(EColorTypes ProjectileType, float ChargeAmount
 	return false;
 }
 
+void AWeapon::SetChargeTimer()
+{
+	GetWorldTimerManager().SetTimer(ChargeTimerHandle, this, &AWeapon::ChargeUpdate, MaxChargeDuration, true, -1.0f);
+}
+
+void AWeapon::ChargeUpdate()
+{
+	UE_LOG(LogTemp, Warning, TEXT("hej"));
+	if (bIsChargingWeapon)
+	{
+		TryToFireProjectile(ProjectileTypeToFire);
+	}
+}
+
 void AWeapon::RateOfFireUpdate()
 {
 	bCanFire = true;
 }
-

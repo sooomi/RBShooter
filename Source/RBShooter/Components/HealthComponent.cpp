@@ -10,7 +10,7 @@ UHealthComponent::UHealthComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
-	MaxHealth = 10;
+	MaxHealth = 10.0f;
 	StartHealth = MaxHealth;
 	CurrentHealth = MaxHealth;
 
@@ -36,27 +36,27 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 }
 
-void UHealthComponent::AddHealth(int32 Health, AActor* InvokeActor)
+void UHealthComponent::AddHealth(float Health, AActor* InvokeActor)
 {
 	CurrentHealth += Health;
 
 	ClampHealth();
 	OnHealthAdded.Broadcast(Health, InvokeActor);
 
-	if (CurrentHealth <= 0)
+	if (CurrentHealth <= 0.0f)
 	{
 		Kill(InvokeActor);
 	}
 }
 
-void UHealthComponent::RemoveHealth(int32 Health, AActor* InvokeActor)
+void UHealthComponent::RemoveHealth(float Health, AActor* InvokeActor)
 {
 	CurrentHealth -= Health;
 
 	ClampHealth();
 	OnHealthRemoved.Broadcast(Health, InvokeActor);
 
-	if (CurrentHealth <= 0)
+	if (CurrentHealth <= 0.0f)
 	{
 		Kill(InvokeActor);
 	}
@@ -66,14 +66,14 @@ void UHealthComponent::Kill(AActor* InvokeActor)
 {
 	if (!bIsDead)
 	{
-		CurrentHealth = 0;
+		CurrentHealth = 0.0f;
 		bIsDead = true;
 
 		OnDeath.Broadcast(InvokeActor);
 	}
 }
 
-void UHealthComponent::Revive(int32 ReviveStartHealth, AActor* InvokeActor)
+void UHealthComponent::Revive(float ReviveStartHealth, AActor* InvokeActor)
 {
 	if (bIsDead)
 	{
@@ -87,6 +87,6 @@ void UHealthComponent::Revive(int32 ReviveStartHealth, AActor* InvokeActor)
 
 void UHealthComponent::ClampHealth()
 {
-	CurrentHealth = FMath::Clamp(CurrentHealth, 0, MaxHealth);
+	CurrentHealth = FMath::Clamp<float>(CurrentHealth, 0.0f, MaxHealth);
 }
 
