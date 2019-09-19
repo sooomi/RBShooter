@@ -5,7 +5,7 @@
 #include "Gameframework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "TimerManager.h"
-#include "Enemy/EnemyBase.h"
+#include "Enemy/Enemy.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -49,7 +49,7 @@ void AProjectileBase::Fire()
 
 void AProjectileBase::OnProjectileHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	AEnemyBase* EnemyActor = Cast<AEnemyBase>(OtherActor);
+	AEnemy* EnemyActor = Cast<AEnemy>(OtherActor);
 	if (EnemyActor)
 	{
 		if (EnemyActor->EnemyType == ProjectileType) // Colors match
