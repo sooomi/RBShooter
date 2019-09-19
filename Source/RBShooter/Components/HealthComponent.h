@@ -6,10 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealthAddedDelegate, int32, Health, AActor*, InvokeActor);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealthRemovedDelegate, int32, Health, AActor*, InvokeActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealthAddedDelegate, float, Health, AActor*, InvokeActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealthRemovedDelegate, float, Health, AActor*, InvokeActor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeathDelegate, AActor*, InvokeActor);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FReviveDelegate, int32, ReviveHealth, AActor*, InvokeActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FReviveDelegate, float, ReviveHealth, AActor*, InvokeActor);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RBSHOOTER_API UHealthComponent : public UActorComponent
@@ -29,16 +29,16 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category="Health Functions")
-	void AddHealth(int32 Health, AActor* InvokeActor = nullptr);
+	void AddHealth(float Health, AActor* InvokeActor = nullptr);
 
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
-	void RemoveHealth(int32 Health, AActor* InvokeActor = nullptr);
+	void RemoveHealth(float Health, AActor* InvokeActor = nullptr);
 
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void Kill(AActor* InvokeActor = nullptr);
 
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
-	void Revive(int32 ReviveStartHealth, AActor* InvokeActor = nullptr);
+	void Revive(float ReviveStartHealth, AActor* InvokeActor = nullptr);
 
 public: // Blueprint-specific events
 
@@ -57,13 +57,13 @@ public: // Blueprint-specific events
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Health")
-	int32 StartHealth;
+	float StartHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health")
-	int32 MaxHealth;
+	float MaxHealth;
 
 	UPROPERTY(BlueprintReadOnly, Category="Health")
-	int32 CurrentHealth;
+	float CurrentHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Health")
 	bool bStartDead;
