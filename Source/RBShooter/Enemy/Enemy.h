@@ -3,21 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "GameFramework/Character.h"
 #include "GameUtility.h"
-#include "EnemyBase.generated.h"
+#include "Enemy.generated.h"
 
-class UMovementComponent;
-class AProjectileBase;
+class UCharacterMovementComponent;
 
 UCLASS()
-class RBSHOOTER_API AEnemyBase : public APawn
+class RBSHOOTER_API AEnemy : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
-	AEnemyBase();
+	// Sets default values for this character's properties
+	AEnemy();
 
 protected:
 	// Called when the game starts or when spawned
@@ -32,10 +31,9 @@ public:
 
 public:
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UMovementComponent* EditorMovement;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Enemy Basic")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Basic")
 	EColorTypes EnemyType;
+
+	UCharacterMovementComponent* CachedMovementComponent;
 
 };
