@@ -8,6 +8,7 @@
 #include "Enemy.generated.h"
 
 class UCharacterMovementComponent;
+class UCapsuleComponent;
 
 UCLASS()
 class RBSHOOTER_API AEnemy : public ACharacter
@@ -34,6 +35,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Basic")
 	EColorTypes EnemyType;
 
+private:
+
 	UCharacterMovementComponent* CachedMovementComponent;
+
+	UCapsuleComponent* CachedCapsuleComponent;
 
 };
