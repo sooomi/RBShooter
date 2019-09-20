@@ -38,27 +38,33 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UHealthComponent::AddHealth(float Health, AActor* InvokeActor)
 {
-	CurrentHealth += Health;
-
-	ClampHealth();
-	OnHealthAdded.Broadcast(Health, InvokeActor);
-
-	if (CurrentHealth <= 0.0f)
+	if (!bIsDead)
 	{
-		Kill(InvokeActor);
+		CurrentHealth += Health;
+
+		ClampHealth();
+		OnHealthAdded.Broadcast(Health, InvokeActor);
+
+		if (CurrentHealth <= 0.0f)
+		{
+			Kill(InvokeActor);
+		}
 	}
 }
 
 void UHealthComponent::RemoveHealth(float Health, AActor* InvokeActor)
 {
-	CurrentHealth -= Health;
-
-	ClampHealth();
-	OnHealthRemoved.Broadcast(Health, InvokeActor);
-
-	if (CurrentHealth <= 0.0f)
+	if (!bIsDead)
 	{
-		Kill(InvokeActor);
+		CurrentHealth -= Health;
+
+		ClampHealth();
+		OnHealthRemoved.Broadcast(Health, InvokeActor);
+
+		if (CurrentHealth <= 0.0f)
+		{
+			Kill(InvokeActor);
+		}
 	}
 }
 
