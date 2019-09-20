@@ -3,6 +3,7 @@
 
 #include "Enemy.h"
 #include "Gameframework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -18,6 +19,8 @@ void AEnemy::BeginPlay()
 	Super::BeginPlay();
 	
 	CachedMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
+
+	CachedCapsuleComponent = Cast<UCapsuleComponent>(GetCapsuleComponent());
 }
 
 // Called every frame
