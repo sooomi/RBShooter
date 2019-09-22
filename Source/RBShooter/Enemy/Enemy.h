@@ -35,6 +35,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy Basic")
 	EColorTypes EnemyType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Enemy Damage")
+	float BaseDamage;
+
 private:
 
 	UCharacterMovementComponent* CachedMovementComponent;
