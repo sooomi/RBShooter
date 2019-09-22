@@ -36,7 +36,7 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 }
 
-void UHealthComponent::AddHealth(float Health, AActor* InvokeActor)
+void UHealthComponent::AddHealth(float Health, AActor* InvokeActor /*= nullptr*/)
 {
 	if (!bIsDead)
 	{
@@ -52,7 +52,28 @@ void UHealthComponent::AddHealth(float Health, AActor* InvokeActor)
 	}
 }
 
-void UHealthComponent::RemoveHealth(float Health, AActor* InvokeActor)
+void UHealthComponent::AddMaxHealth(float Health, AActor* InvokeActor /*= nullptr*/)
+{
+	if (!bIsDead)
+	{
+		MaxHealth += Health;
+
+		ClampHealth();
+
+		if (CurrentHealth <= 0.0f)
+		{
+			Kill(InvokeActor);
+		}
+	}
+}
+
+void UHealthComponent::AddCurrentAndMaxHealth(float CurrentHealth, float MaxHealth, AActor* InvokeActor /*= nullptr*/)
+{
+	AddMaxHealth(MaxHealth, InvokeActor);
+	AddHealth(CurrentHealth, InvokeActor);
+}
+
+void UHealthComponent::RemoveHealth(float Health, AActor* InvokeActor /*= nullptr*/)
 {
 	if (!bIsDead)
 	{
@@ -68,7 +89,28 @@ void UHealthComponent::RemoveHealth(float Health, AActor* InvokeActor)
 	}
 }
 
-void UHealthComponent::Kill(AActor* InvokeActor)
+void UHealthComponent::RemoveMaxHealth(float Health, AActor* InvokeActor /*= nullptr*/)
+{
+	if (!bIsDead)
+	{
+		MaxHealth -= Health;
+
+		ClampHealth();
+
+		if (CurrentHealth <= 0.0f)
+		{
+			Kill(InvokeActor);
+		}
+	}
+}
+
+void UHealthComponent::RemoveCurrentAndMaxHealth(float CurrentHealth, float MaxHealth, AActor* InvokeActor /*= nullptr*/)
+{
+	RemoveMaxHealth(MaxHealth, InvokeActor);
+	RemoveHealth(CurrentHealth, InvokeActor);
+}
+
+void UHealthComponent::Kill(AActor* InvokeActor /*= nullptr*/)
 {
 	if (!bIsDead)
 	{
@@ -79,7 +121,7 @@ void UHealthComponent::Kill(AActor* InvokeActor)
 	}
 }
 
-void UHealthComponent::Revive(float ReviveStartHealth, AActor* InvokeActor)
+void UHealthComponent::Revive(float ReviveStartHealth, AActor* InvokeActor /*= nullptr*/)
 {
 	if (bIsDead)
 	{

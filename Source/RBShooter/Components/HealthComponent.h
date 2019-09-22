@@ -32,7 +32,19 @@ public:
 	void AddHealth(float Health, AActor* InvokeActor = nullptr);
 
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
+	void AddMaxHealth(float Health, AActor* InvokeActor = nullptr);
+
+	UFUNCTION(BlueprintCallable, Category = "Health Functions")
+	void AddCurrentAndMaxHealth(float CurrentHealth, float MaxHealth, AActor* InvokeActor = nullptr);
+
+	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void RemoveHealth(float Health, AActor* InvokeActor = nullptr);
+
+	UFUNCTION(BlueprintCallable, Category = "Health Functions")
+	void RemoveMaxHealth(float Health, AActor* InvokeActor = nullptr);
+
+	UFUNCTION(BlueprintCallable, Category = "Health Functions")
+	void RemoveCurrentAndMaxHealth(float CurrentHealth, float MaxHealth, AActor* InvokeActor = nullptr);
 
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void Kill(AActor* InvokeActor = nullptr);
