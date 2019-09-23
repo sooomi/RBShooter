@@ -33,4 +33,12 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category="Enemy Spawning")
 	TArray<AActor*> EnemySpawnNodes;
+
+	UPROPERTY(BlueprintReadOnly, Category="Enemy Spawning")
+	TArray<AActor*> SelectedEnemySpawnNodes;
+
+public:
+
+	UFUNCTION(BlueprintCallable, Category="Enemy Spawning")
+	TArray<AActor*>& GetRandomEnemySpawnNodes(int32 NumNodes);
 };
