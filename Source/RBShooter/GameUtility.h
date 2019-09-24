@@ -14,6 +14,16 @@ enum class EColorTypes : uint8
 	CT_Blue UMETA(DisplayName = "Blue Color")
 };
 
+UENUM(BlueprintType)
+enum class EEnemySpawnTypes : uint8
+{
+	EST_Random = 0 UMETA(DisplayName = "Random Enemy"),
+	EST_Red UMETA(DisplayName = "Red Enemy"),
+	EST_Blue UMETA(DisplayName = "Blue Enemy"),
+
+	EST_COUNT
+};
+
 /**
  * 
  */
