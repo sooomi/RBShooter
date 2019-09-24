@@ -4,17 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "GameUtility.h"
 #include "RBShooterGameModeBase.generated.h"
 
-UENUM(BlueprintType)
-enum class EEnemySpawnTypes : uint8
-{
-	EST_Random = 0 UMETA(DisplayName = "Random Enemy"),
-	EST_Red UMETA(DisplayName = "Red Enemy"),
-	EST_Blue UMETA(DisplayName = "Blue Enemy"),
-
-	EST_COUNT
-};
+class AEnemySpawnNode;
 
 /**
  * 
@@ -41,4 +34,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Enemy Spawning")
 	TArray<AActor*>& GetRandomEnemySpawnNodes(int32 NumNodes);
+
+private:
+
+	bool CanEnemyNodeBeSpawned(AEnemySpawnNode* SpawnNode);
 };

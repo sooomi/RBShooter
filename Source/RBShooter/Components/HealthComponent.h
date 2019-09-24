@@ -28,27 +28,39 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	/* Returns the current health percentage relative to max health. Value is between 0 and 1. */
+	UFUNCTION(BlueprintPure, Category="Health Functions")
+	float GetHealthPercentage();
+
+	/* Adds to current health */
 	UFUNCTION(BlueprintCallable, Category="Health Functions")
 	void AddHealth(float Health, AActor* InvokeActor = nullptr);
 
+	/* Adds to max health */
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void AddMaxHealth(float Health, AActor* InvokeActor = nullptr);
 
+	/* Adds to current and max health */
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void AddCurrentAndMaxHealth(float CurrentHealth, float MaxHealth, AActor* InvokeActor = nullptr);
 
+	/* Removes from current health */
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void RemoveHealth(float Health, AActor* InvokeActor = nullptr);
 
+	/* Removes from max health */
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void RemoveMaxHealth(float Health, AActor* InvokeActor = nullptr);
 
+	/* Removes from current and max health */
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void RemoveCurrentAndMaxHealth(float CurrentHealth, float MaxHealth, AActor* InvokeActor = nullptr);
 
+	/* Kills the actor, regardless of health */
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void Kill(AActor* InvokeActor = nullptr);
 
+	/* Revives a dead actor */
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
 	void Revive(float ReviveStartHealth, AActor* InvokeActor = nullptr);
 
