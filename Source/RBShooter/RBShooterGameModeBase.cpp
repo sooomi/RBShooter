@@ -6,12 +6,20 @@
 
 ARBShooterGameModeBase::ARBShooterGameModeBase()
 {
+	PrimaryActorTick.bCanEverTick = false;
 
+	CurrentWave = 0;
+	CurrentWaveBurst = 0;
 }
 
 ARBShooterGameModeBase::~ARBShooterGameModeBase()
 {
 
+}
+
+void ARBShooterGameModeBase::Tick(float DeltaSeconds)
+{
+	// TODO enable tick in constructor before using this
 }
 
 EEnemySpawnTypes ARBShooterGameModeBase::GetRandomEnemySpawnType()

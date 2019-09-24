@@ -21,19 +21,42 @@ public:
 	ARBShooterGameModeBase();
 	~ARBShooterGameModeBase();
 
+	virtual void Tick(float DeltaSeconds) override;
+
 	UFUNCTION(BlueprintCallable, Category="Enemy Spawning")
 	EEnemySpawnTypes GetRandomEnemySpawnType();
 
-	UPROPERTY(BlueprintReadWrite, Category="Enemy Spawning")
-	TArray<AActor*> EnemySpawnNodes;
+	UFUNCTION(BlueprintCallable, Category = "Enemy Spawning")
+	TArray<AActor*>& GetRandomEnemySpawnNodes(int32 NumNodes);
 
-	UPROPERTY(BlueprintReadOnly, Category="Enemy Spawning")
-	TArray<AActor*> SelectedEnemySpawnNodes;
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="Wave Management")
+	bool DoWaveBurst(int32 NumberOfEnemiesToSpawn);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Wave Management")
+	void OnWaveCompleted(int32 WaveNumber, float TimeLeft);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Wave Management")
+	void OnWaveBurst(int32 WaveNumber, int32 BurstNumber);
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category="Enemy Spawning")
-	TArray<AActor*>& GetRandomEnemySpawnNodes(int32 NumNodes);
+	UPROPERTY(BlueprintReadWrite, Category = "Enemy Spawning")
+	TArray<AActor*> EnemySpawnNodes;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Enemy Spawning")
+	TArray<AActor*> SelectedEnemySpawnNodes;
+
+	UPROPERTY(BlueprintReadOnly, Category="Wave Management")
+	FTimerHandle WaveTimerHandle;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Wave Management")
+	FTimerHandle BurstTimerHandle;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Wave Management")
+	int32 CurrentWave;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Wave Management")
+	int32 CurrentWaveBurst;
 
 private:
 
