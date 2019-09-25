@@ -10,6 +10,7 @@
 class UProjectileMovementComponent;
 class USphereComponent;
 class AEnemy;
+class ACharacter;
 
 UCLASS()
 class RBSHOOTER_API AProjectileBase : public AActor
@@ -34,7 +35,7 @@ public:
 	// Called from weapon blueprint when this actor
 	// is spawned in the world
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void Fire();
+	void Fire(ACharacter* CharacterOwner);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Projectile Event")
 	void OnProjectileFired();
@@ -46,6 +47,9 @@ public:
 	virtual void OnProjectileHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 public:
+
+	UPROPERTY(BlueprintReadOnly, Category="Projectile")
+	ACharacter* CharacterOwner;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	EColorTypes ProjectileType;

@@ -42,8 +42,10 @@ void AProjectileBase::Tick(float DeltaTime)
 
 }
 
-void AProjectileBase::Fire()
+void AProjectileBase::Fire(ACharacter* Owner)
 {
+	CharacterOwner = Owner;
+
 	OnProjectileFired();
 }
 
