@@ -24,10 +24,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
-	/* Get random type from enum */
-	UFUNCTION(BlueprintCallable, Category="Enemy Spawning")
-	EEnemySpawnTypes GetRandomEnemySpawnType();
-
 	/* Get randomly selected nodes from available nodes in the level */
 	UFUNCTION(BlueprintCallable, Category = "Enemy Spawning")
 	void GetRandomEnemySpawnNodes(UPARAM(DisplayName="Number of Nodes") int32 NumNodes, TArray<AActor*>& OutNodes);

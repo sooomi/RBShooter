@@ -54,11 +54,6 @@ void ARBShooterGameModeBase::ResetToDefault()
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawnNode::StaticClass(), EnemySpawnNodes);
 }
 
-EEnemySpawnTypes ARBShooterGameModeBase::GetRandomEnemySpawnType()
-{
-	return (EEnemySpawnTypes)FMath::RandRange(1, (int32)EEnemySpawnTypes::EST_COUNT - 1);
-}
-
 bool ARBShooterGameModeBase::StartWave(float WaveDuration, float BurstInterval, float BurstDuration, int32 FirstBurstNumEnemies)
 {
 	if (!bWaveActive)
@@ -214,7 +209,12 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 
 bool ARBShooterGameModeBase::CanEnemyNodeBeSpawned(AEnemySpawnNode* SpawnNode)
 {
-	return true;
+	if (CurrentWave >= SpawnNode->MinimumWaveCount)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void ARBShooterGameModeBase::ActivateNextEnemyNode()
