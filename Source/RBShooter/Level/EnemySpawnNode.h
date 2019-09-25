@@ -29,9 +29,9 @@ public:
 
 public:
 
-	/* The type of enemy to spawn when activated. Random will randomly choose between the others. */
+	/* Pool of possible enemies that can spawn from this node. Will randomly choose between them. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Spawning")
-	EEnemySpawnTypes SpawnType;
+	TArray<TSubclassOf<AActor>> EnemyActorPool;
 
 	/* Minimum wave count required to be activated. 0 means it can activate at any wave, any number above means it can only activate if the current round is at that number or higher. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Spawning")

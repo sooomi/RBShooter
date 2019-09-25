@@ -11,10 +11,7 @@ ARBShooterGameModeBase::ARBShooterGameModeBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	bWaveActive = false;
-	NextBurstNumEnemies = 0;
-	CurrentWave = 0;
-	CurrentWaveBurst = 0;
+	ResetWaveVariables();
 }
 
 ARBShooterGameModeBase::~ARBShooterGameModeBase()
@@ -36,28 +33,34 @@ void ARBShooterGameModeBase::Tick(float DeltaSeconds)
 	// TODO enable tick in constructor before using this
 }
 
+void ARBShooterGameModeBase::ResetWaveVariables()
+{
+	bWaveActive = false;
+	CurrentBurstSpawnDuration = 0.0f;
+	CurrentBurstInterval = 0.0f;
+	CurrentSpawnInterval = 0.0f;
+	NumNextBurstEnemies = 0;
+	NumCurrentEnemiesPendingSpawn = 0;
+	CurrentWave = 0;
+	CurrentWaveBurst = 0;
+}
+
 void ARBShooterGameModeBase::ResetToDefault()
 {
 	StopWave();
 
-	bWaveActive = false;
-	NextBurstNumEnemies = 0;
-	CurrentWave = 0;
-	CurrentWaveBurst = 0;
+	ResetWaveVariables();
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawnNode::StaticClass(), EnemySpawnNodes);
 }
 
-EEnemySpawnTypes ARBShooterGameModeBase::GetRandomEnemySpawnType()
-{
-	return (EEnemySpawnTypes)FMath::RandRange(1, (int32)EEnemySpawnTypes::EST_COUNT - 1);
-}
-
-bool ARBShooterGameModeBase::StartWave(float WaveDuration, float BurstInterval, int32 FirstBurstNumEnemies)
+bool ARBShooterGameModeBase::StartWave(float WaveDuration, float BurstInterval, float BurstDuration, int32 FirstBurstNumEnemies)
 {
 	if (!bWaveActive)
 	{
 		bWaveActive = true;
+
+		CurrentSpawnInterval = WaveDuration;
 
 		CurrentWave++;
 		CurrentWaveBurst = 0;
@@ -65,7 +68,7 @@ bool ARBShooterGameModeBase::StartWave(float WaveDuration, float BurstInterval, 
 		// Start wave timer
 		GetWorldTimerManager().SetTimer(WaveTimerHandle, this, &ARBShooterGameModeBase::WaveTimerUpdate, WaveDuration, false, -1.0f);
 
-		StartBurst(BurstInterval, FirstBurstNumEnemies);
+		StartBurst(BurstInterval, BurstDuration, FirstBurstNumEnemies);
 
 		return true;
 	}
@@ -94,16 +97,32 @@ bool ARBShooterGameModeBase::StopWave()
 	return false;
 }
 
-bool ARBShooterGameModeBase::StartBurst(float BurstInterval, int32 NumEnemiesToSpawn)
+bool ARBShooterGameModeBase::StartBurst(float BurstInterval, float BurstDuration, int32 NumEnemiesToSpawn)
 {
 	if (bWaveActive)
 	{
+		CurrentWaveBurst++;
+
+		CurrentBurstInterval = BurstInterval;
+		CurrentBurstSpawnDuration = BurstDuration;
+
 		// Start burst timer
 		GetWorldTimerManager().SetTimer(BurstTimerHandle, this, &ARBShooterGameModeBase::BurstTimerUpdate, BurstInterval, false, -1.0f);
 
-		NextBurstNumEnemies = NumEnemiesToSpawn;
+		NumNextBurstEnemies = NumEnemiesToSpawn;
 
-		return true;
+		// Start burst enemy spawning
+		GetRandomEnemySpawnNodes(NumEnemiesToSpawn, SelectedEnemySpawnNodes);
+		if (SelectedEnemySpawnNodes.Num() > 0)
+		{
+			// Start the burst spawn timer
+			NumCurrentEnemiesPendingSpawn = NumEnemiesToSpawn;
+			float BurstSpawnInterval = BurstDuration / (float)NumCurrentEnemiesPendingSpawn;
+			UE_LOG(LogTemp, Warning, TEXT("Enemies %i Duration %f Interval %f"), NumCurrentEnemiesPendingSpawn, BurstDuration, BurstSpawnInterval);
+			GetWorldTimerManager().SetTimer(BurstSpawnTimerHandle, this, &ARBShooterGameModeBase::BurstSpawnTimerUpdate, BurstSpawnInterval, true, 0.0f);
+
+			return true;
+		}
 	}
 
 	return false;
@@ -113,38 +132,17 @@ bool ARBShooterGameModeBase::StopBurst()
 {
 	// Stop burst timer
 	GetWorldTimerManager().ClearTimer(BurstTimerHandle);
+	GetWorldTimerManager().ClearTimer(BurstSpawnTimerHandle);
 
 	return true;
 }
 
 bool ARBShooterGameModeBase::DoWaveBurst(int32 NumEnemiesToSpawn)
 {
-	TArray<AActor*> SelectedEnemySpawnNodes;
-	GetRandomEnemySpawnNodes(NumEnemiesToSpawn, SelectedEnemySpawnNodes);
+	// Blueprint callback
+	OnWaveBurst(CurrentWave, CurrentWaveBurst, NumEnemiesToSpawn);
 
-	if (SelectedEnemySpawnNodes.Num() > 0)
-	{
-		for (int32 i = 0; i < SelectedEnemySpawnNodes.Num(); i++)
-		{
-			AEnemySpawnNode* SpawnNode = Cast<AEnemySpawnNode>(SelectedEnemySpawnNodes[i]);
-			if (SpawnNode)
-			{
-				SpawnNode->ActivateSpawn();
-			}
-			else
-			{
-				UE_LOG(LogTemp, Error, TEXT("Spawn Node is not AEnemySpawnNode!"));
-			}
-		}
-
-		CurrentWaveBurst++;
-
-		OnWaveBurst(CurrentWave, CurrentWaveBurst, NumEnemiesToSpawn);
-
-		return true;
-	}
-
-	return false;
+	return true;
 }
 
 void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AActor*>& OutNodes)
@@ -211,7 +209,38 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 
 bool ARBShooterGameModeBase::CanEnemyNodeBeSpawned(AEnemySpawnNode* SpawnNode)
 {
-	return true;
+	if (CurrentWave >= SpawnNode->MinimumWaveCount)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void ARBShooterGameModeBase::ActivateNextEnemyNode()
+{
+	if (NumCurrentEnemiesPendingSpawn > 0)
+	{
+		int32 CurrentEnemyIndex = SelectedEnemySpawnNodes.Num() - NumCurrentEnemiesPendingSpawn;
+		checkf(CurrentEnemyIndex >= 0 && CurrentEnemyIndex < SelectedEnemySpawnNodes.Num(), TEXT("Index out of bounds"));
+
+		AEnemySpawnNode* SpawnNode = Cast<AEnemySpawnNode>(SelectedEnemySpawnNodes[CurrentEnemyIndex]);
+		if (SpawnNode)
+		{
+			SpawnNode->ActivateSpawn();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Spawn Node is not AEnemySpawnNode!"));
+		}
+
+		NumCurrentEnemiesPendingSpawn--;
+
+		if (NumCurrentEnemiesPendingSpawn <= 0)
+		{
+			GetWorldTimerManager().ClearTimer(BurstSpawnTimerHandle);
+		}
+	}
 }
 
 void ARBShooterGameModeBase::WaveTimerUpdate()
@@ -223,7 +252,14 @@ void ARBShooterGameModeBase::WaveTimerUpdate()
 
 void ARBShooterGameModeBase::BurstTimerUpdate()
 {
-	DoWaveBurst(NextBurstNumEnemies);
+	DoWaveBurst(NumNextBurstEnemies);
 
 	UE_LOG(LogTemp, Warning, TEXT("BurstTimerUpdate"));
+}
+
+void ARBShooterGameModeBase::BurstSpawnTimerUpdate()
+{
+	ActivateNextEnemyNode();
+
+	UE_LOG(LogTemp, Warning, TEXT("BurstSpawnTimerUpdate %i"), NumCurrentEnemiesPendingSpawn);
 }
