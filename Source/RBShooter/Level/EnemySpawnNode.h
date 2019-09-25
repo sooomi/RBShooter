@@ -24,6 +24,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="Spawning")
+	void ActivateSpawn();
+
 public:
 
 	/* The type of enemy to spawn when activated. Random will randomly choose between the others. */
