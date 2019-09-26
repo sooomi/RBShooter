@@ -30,7 +30,7 @@ public:
 
 	/* Start a wave if not currently in progress. @return True if wave was started */
 	UFUNCTION(BlueprintCallable, Category="Wave Management")
-	bool StartWave(float WaveDuration = 60.0f, float BurstInterval = 25.0f, float BurstDuration = 10.0f, UPARAM(DisplayName = "Number Of Enemies To Spawn On First Burst") int32 FirstBurstNumEnemies = 5);
+	bool StartWave(int32 NumberOfBursts, float BurstDuration, float BurstPauseDuration);
 
 	/* Stops a wave and its timers. @return True if wave was stopped */
 	UFUNCTION(BlueprintCallable, Category="Wave Management")
@@ -38,15 +38,19 @@ public:
 
 	/* Starts a burst timer if wave is in progress. @param1 How long until next burst @param2 How long the burst should last */
 	UFUNCTION(BlueprintCallable, Category="Wave Management")
-	bool StartBurst(float BurstInterval, float BurstDuration, UPARAM(DisplayName = "Number of Enemies to Spawn") int32 NumEnemiesToSpawn);
+	bool StartBurst(UPARAM(DisplayName = "Number of Enemies to Spawn") int32 NumEnemiesToSpawn);
 
 	/* Stops a burst timer. @return True if burst was stopped */
 	UFUNCTION(BlueprintCallable, Category = "Wave Management")
 	bool StopBurst();
 
-	/* Spawn enemies from available nodes in the level */
-	UFUNCTION(BlueprintCallable, Category="Wave Management")
-	bool DoWaveBurst(UPARAM(DisplayName = "Number of Enemies to Spawn") int32 NumEnemiesToSpawn);
+	/* When a wave is completed */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Wave Management")
+	void OnNextWaveReady(int32 WaveNumber);
+
+	/* When a burst is completed. A wave can consist of several bursts. */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Wave Management")
+	void OnNextBurstReady(int32 WaveNumber, int32 BurstNumber);
 
 	/* When a wave is completed */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Wave Management")
@@ -54,7 +58,10 @@ public:
 
 	/* When a burst is completed. A wave can consist of several bursts. */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Wave Management")
-	void OnWaveBurst(int32 WaveNumber, int32 BurstNumber, int32 NumEnemiesToSpawn);
+	void OnBurstCompleted(int32 WaveNumber, int32 BurstNumber);
+
+	UFUNCTION(BlueprintCallable, Category="Wave Management")
+	bool StartGameIfPossible(float TimeUntilFirstBurst = 0.0f);
 
 	UFUNCTION(BlueprintCallable, Category="Wave Management")
 	void ResetToDefault();
@@ -96,15 +103,20 @@ private:
 	void WaveTimerUpdate();
 	void BurstTimerUpdate();
 	void BurstSpawnTimerUpdate();
+	void FirstBurstDelayTimerUpdate();
 
 	void ResetWaveVariables();
 
 private:
 
-	float CurrentBurstInterval;
-	float CurrentBurstSpawnDuration;
+	float CurrentBurstDuration;
+	float CurrentBurstPauseDuration;
+	float CurrentWaveDuration;
+
 	float CurrentSpawnInterval;
 
 	int32 NumNextBurstEnemies;
 	int32 NumCurrentEnemiesPendingSpawn;
+
+	FTimerHandle InitialWaveBurstTimer;
 };
