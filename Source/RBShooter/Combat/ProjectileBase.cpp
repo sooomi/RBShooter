@@ -19,6 +19,7 @@ AProjectileBase::AProjectileBase()
 	RootComponent = EditorSphereComponent;
 
 	MaxLifeTime = 20.0f;
+	ProjectileDamage = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -42,9 +43,9 @@ void AProjectileBase::Tick(float DeltaTime)
 
 }
 
-void AProjectileBase::Fire(ACharacter* Owner)
+void AProjectileBase::Fire(ACharacter* CharOwner)
 {
-	CharacterOwner = Owner;
+	CharacterOwner = CharOwner;
 
 	OnProjectileFired();
 }
@@ -56,11 +57,11 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* OverlappedComponent, 
 	{
 		if (EnemyActor->EnemyType == ProjectileType) // Colors match
 		{
-			OnProjectileHitEnemy(EnemyActor, true);
+			OnProjectileHitEnemy(EnemyActor, true, ProjectileDamage);
 		}
 		else // Colors don't match
 		{
-			OnProjectileHitEnemy(EnemyActor, false);
+			OnProjectileHitEnemy(EnemyActor, false, ProjectileDamage);
 		}
 	}
 	else
