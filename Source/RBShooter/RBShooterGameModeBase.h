@@ -95,8 +95,14 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Wave Management")
 	bool bWaveActive;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Wave Management")
+	UPROPERTY(BlueprintReadOnly, Category = "Game")
 	bool bGameActive;
+
+	UPROPERTY(BlueprintReadWrite, Category="Player Stats")
+	FKillCount KillCountThisWave;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
+	FKillCount KillCountTotal;
 
 private:
 
