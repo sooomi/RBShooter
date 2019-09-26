@@ -167,9 +167,6 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 {
 	OutNodes.Reset();
 
-	// Cant randomize more nodes than existing
-	NumNodes = FMath::Clamp(NumNodes, 0, EnemySpawnNodes.Num());
-
 	// Early exit - number of nodes to be randomized is equal to number of existing nodes (no randomization needed)
 	if (NumNodes == EnemySpawnNodes.Num())
 	{
@@ -178,23 +175,27 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 	}
 
 	// Randomize nodes
+	bool bDoDuplicateCheck = true;
 	for (int32 i = 0; i < NumNodes; i++)
 	{
-		int32 RandomIndex = -1;
+		int32 RandomIndex = FMath::RandRange(0, EnemySpawnNodes.Num() - 1);;
 
 		// Find a random index from all available nodes, that is not a duplicate of currently selected node array
 		bool bIndexOk = false;
+		bool bDoDuplicateCheck = true;
 		int32 IterateCount = 0;
 		while (!bIndexOk && IterateCount < EnemySpawnNodes.Num())
 		{
-			RandomIndex = FMath::RandRange(0, EnemySpawnNodes.Num() - 1);
-
+			// Check if the node was already added
 			bool bFoundSameIndex = false;
-			for (int32 j = 0; j < OutNodes.Num(); j++)
+			if (bDoDuplicateCheck)
 			{
-				if (EnemySpawnNodes[RandomIndex] == OutNodes[j])
+				for (int32 j = 0; j < OutNodes.Num(); j++)
 				{
-					bFoundSameIndex = true;
+					if (EnemySpawnNodes[RandomIndex] == OutNodes[j])
+					{
+						bFoundSameIndex = true;
+					}
 				}
 			}
 
@@ -217,11 +218,19 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 				}
 			}
 
+			// Re-generate random index
+			RandomIndex = FMath::RandRange(0, EnemySpawnNodes.Num() - 1);
+
 			IterateCount++;
 		}
 
 		// "Select" the node by adding it to the array
 		OutNodes.Add(EnemySpawnNodes[RandomIndex]);
+
+		if (OutNodes.Num() >= EnemySpawnNodes.Num())
+		{
+			bDoDuplicateCheck = false;
+		}
 	}
 }
 
