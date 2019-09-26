@@ -95,6 +95,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Wave Management")
 	bool bWaveActive;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Wave Management")
+	bool bGameActive;
+
 private:
 
 	bool CanEnemyNodeBeSpawned(AEnemySpawnNode* SpawnNode);
