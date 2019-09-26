@@ -95,6 +95,8 @@ bool ARBShooterGameModeBase::StartWave(int32 NumberOfBursts, float BurstDuration
 
 		CurrentWaveDuration = WaveDuration;
 
+		UGameUtility::ResetKillcount(KillCountThisWave);
+
 		UE_LOG(LogTemp, Warning, TEXT("Starting Wave. Number of bursts %i Burst Duration %f Pause %f Wave Duration %f"), NumberOfBursts, BurstDuration, BurstPauseDuration, WaveDuration);
 
 		// Start wave timer
