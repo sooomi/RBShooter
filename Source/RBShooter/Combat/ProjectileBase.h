@@ -57,6 +57,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	float MaxLifeTime;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	float ProjectileDamage;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USphereComponent* EditorSphereComponent;
 

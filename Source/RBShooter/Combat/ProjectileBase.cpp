@@ -19,6 +19,7 @@ AProjectileBase::AProjectileBase()
 	RootComponent = EditorSphereComponent;
 
 	MaxLifeTime = 20.0f;
+	ProjectileDamage = 1.0f;
 }
 
 // Called when the game starts or when spawned
