@@ -11,6 +11,8 @@ ARBShooterGameModeBase::ARBShooterGameModeBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	bGameActive = false;
+
 	ResetWaveVariables();
 }
 
@@ -50,6 +52,8 @@ bool ARBShooterGameModeBase::StartGameIfPossible(float TimeUntilFirstBurst)
 {
 	if (EnemySpawnNodes.Num() > 0)
 	{
+		bGameActive = true;
+
 		OnNextWaveReady(CurrentWave);
 
 		if (TimeUntilFirstBurst > 0.0f)
@@ -127,7 +131,7 @@ bool ARBShooterGameModeBase::StopWave()
 
 bool ARBShooterGameModeBase::StartBurst(int32 NumEnemiesToSpawn)
 {
-	if (bWaveActive)
+	if (bGameActive)
 	{
 		CurrentWaveBurst++;
 
@@ -182,7 +186,6 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 
 		// Find a random index from all available nodes, that is not a duplicate of currently selected node array
 		bool bIndexOk = false;
-		bool bDoDuplicateCheck = true;
 		int32 IterateCount = 0;
 		while (!bIndexOk && IterateCount < EnemySpawnNodes.Num())
 		{
