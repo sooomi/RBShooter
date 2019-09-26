@@ -57,11 +57,11 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* OverlappedComponent, 
 	{
 		if (EnemyActor->EnemyType == ProjectileType) // Colors match
 		{
-			OnProjectileHitEnemy(EnemyActor, true);
+			OnProjectileHitEnemy(EnemyActor, true, ProjectileDamage);
 		}
 		else // Colors don't match
 		{
-			OnProjectileHitEnemy(EnemyActor, false);
+			OnProjectileHitEnemy(EnemyActor, false, ProjectileDamage);
 		}
 	}
 	else
