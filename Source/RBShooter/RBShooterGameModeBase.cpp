@@ -12,6 +12,7 @@ ARBShooterGameModeBase::ARBShooterGameModeBase()
 	PrimaryActorTick.bCanEverTick = false;
 
 	bGameActive = false;
+	bFirstBurstDelayActive = false;
 
 	ResetWaveVariables();
 }
@@ -59,10 +60,7 @@ bool ARBShooterGameModeBase::StartGameIfPossible(float TimeUntilFirstBurst)
 		if (TimeUntilFirstBurst > 0.0f)
 		{
 			GetWorldTimerManager().SetTimer(InitialWaveBurstTimer, this, &ARBShooterGameModeBase::FirstBurstDelayTimerUpdate, TimeUntilFirstBurst, false, -1.0f);
-		}
-		else
-		{
-			OnNextBurstReady(CurrentWaveBurst, CurrentWaveBurst);
+			bFirstBurstDelayActive = true;
 		}
 
 		return true;
@@ -102,6 +100,12 @@ bool ARBShooterGameModeBase::StartWave(int32 NumberOfBursts, float BurstDuration
 		// Start wave timer
 		GetWorldTimerManager().SetTimer(WaveTimerHandle, this, &ARBShooterGameModeBase::WaveTimerUpdate, WaveDuration, false, -1.0f);
 
+		// Start first burst
+		if (!bFirstBurstDelayActive)
+		{
+			OnNextBurstReady(CurrentWave, CurrentWaveBurst);
+		}
+
 		return true;
 	}
 
@@ -119,9 +123,6 @@ bool ARBShooterGameModeBase::StopWave()
 
 		// Stop burst timer
 		StopBurst();
-
-		float TimeElapsed = GetWorldTimerManager().GetTimerElapsed(WaveTimerHandle);
-		OnWaveCompleted(CurrentWave, TimeElapsed);
 
 		return true;
 	}
@@ -276,7 +277,10 @@ void ARBShooterGameModeBase::ActivateNextEnemyNode()
 void ARBShooterGameModeBase::WaveTimerUpdate()
 {
 	StopWave();
+
+	float TimeElapsed = GetWorldTimerManager().GetTimerElapsed(WaveTimerHandle);
 	OnWaveCompleted(CurrentWave, CurrentWaveBurst);
+
 	OnNextWaveReady(CurrentWave);
 
 	UE_LOG(LogTemp, Warning, TEXT("WaveTimerUpdate"));
@@ -300,5 +304,6 @@ void ARBShooterGameModeBase::BurstSpawnTimerUpdate()
 
 void ARBShooterGameModeBase::FirstBurstDelayTimerUpdate()
 {
+	bFirstBurstDelayActive = false;
 	OnNextBurstReady(CurrentWave, CurrentWaveBurst);
 }

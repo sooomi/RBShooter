@@ -117,6 +117,8 @@ private:
 	float CurrentWaveDuration;
 
 	float CurrentSpawnInterval;
+	
+	bool bFirstBurstDelayActive;
 
 	int32 NumNextBurstEnemies;
 	int32 NumCurrentEnemiesPendingSpawn;
