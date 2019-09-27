@@ -60,6 +60,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	float ProjectileDamage;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Projectile")
+	float ChargeAmount;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USphereComponent* EditorSphereComponent;
 
