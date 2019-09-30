@@ -90,7 +90,6 @@ void AWeapon::SetChargeTimer()
 
 void AWeapon::ChargeUpdate()
 {
-	UE_LOG(LogTemp, Warning, TEXT("hej"));
 	if (bIsChargingWeapon)
 	{
 		TryToFireProjectile(ProjectileTypeToFire);
