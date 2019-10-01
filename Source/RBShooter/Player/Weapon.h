@@ -32,8 +32,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Fire")
 	bool ReleaseProjectile(EColorTypes ProjectileType);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Fire")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Events")
 	void OnFireProjectileConfirmed(EColorTypes ProjectileType, float ChargeAmount);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Events")
+	void OnProjectileLoad(EColorTypes ProjectileType);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Events")
+	void OnProjectileReleased(EColorTypes ProjectileType, float ChargeFraction);
 
 private: // Weapon charging
 

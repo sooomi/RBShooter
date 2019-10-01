@@ -48,6 +48,8 @@ bool AWeapon::LoadProjectile(EColorTypes ProjectileType)
 		SetChargeTimer();
 		bIsChargingWeapon = true;
 
+		OnProjectileLoad(ProjectileType);
+
 		return true;
 	}
 
@@ -76,6 +78,9 @@ bool AWeapon::TryToFireProjectile(EColorTypes ProjectileType)
 		float ChargeAmount = FMath::Max(0.0f, GetWorldTimerManager().GetTimerElapsed(ChargeTimerHandle));
 		OnFireProjectileConfirmed(ProjectileType, ChargeAmount);
 		bCanFire = false;
+
+		float ChargePercent = ChargeAmount / MaxChargeDuration;
+		OnProjectileReleased(ProjectileType, ChargePercent);
 
 		return true;
 	}
