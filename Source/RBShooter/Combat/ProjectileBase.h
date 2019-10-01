@@ -11,6 +11,7 @@ class UProjectileMovementComponent;
 class USphereComponent;
 class AEnemy;
 class ACharacter;
+class AWeapon;
 
 UCLASS()
 class RBSHOOTER_API AProjectileBase : public AActor
@@ -32,10 +33,13 @@ public:
 
 public:
 
+	UFUNCTION(BlueprintPure, Category="Damage")
+	float GetDamage();
+
 	// Called from weapon blueprint when this actor
 	// is spawned in the world
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void Fire(ACharacter* CharacterOwner);
+	void Fire(ACharacter* CharacterOwner, AWeapon* Weapon);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Projectile Event")
 	void OnProjectileFired();
@@ -51,14 +55,20 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Projectile")
 	ACharacter* CharacterOwner;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Projectile")
+	AWeapon* WeaponOwner;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	EColorTypes ProjectileType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	float MaxLifeTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
-	float ProjectileDamage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	float BaseDamage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	float DamageBonus;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Projectile")
 	float ChargeAmount;

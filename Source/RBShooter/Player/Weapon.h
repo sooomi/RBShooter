@@ -26,6 +26,9 @@ public:
 	
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintPure, Category="Weapon Damage")
+	float GetDamage(EColorTypes ColorType);
+
 	UFUNCTION(BlueprintCallable, Category="Weapon Fire")
 	bool LoadProjectile(EColorTypes ProjectileType);
 
@@ -40,6 +43,17 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Events")
 	void OnProjectileReleased(EColorTypes ProjectileType, float ChargeFraction);
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
+	float DamageRed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
+	float DamageBlue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
+	float DamageGeneric;
 
 private: // Weapon charging
 
