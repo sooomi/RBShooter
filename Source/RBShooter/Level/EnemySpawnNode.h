@@ -7,6 +7,8 @@
 #include "GameUtility.h"
 #include "EnemySpawnNode.generated.h"
 
+class AEnemy;
+
 UCLASS()
 class RBSHOOTER_API AEnemySpawnNode : public AActor
 {
@@ -25,7 +27,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="Spawning")
-	void ActivateSpawn();
+	AEnemy* ActivateSpawn();
 
 public:
 
