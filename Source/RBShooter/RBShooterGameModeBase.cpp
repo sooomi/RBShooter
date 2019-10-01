@@ -260,7 +260,9 @@ void ARBShooterGameModeBase::ActivateNextEnemyNode()
 		AEnemySpawnNode* SpawnNode = Cast<AEnemySpawnNode>(SelectedEnemySpawnNodes[CurrentEnemyIndex]);
 		if (SpawnNode)
 		{
-			SpawnNode->ActivateSpawn();
+			AEnemy* SpawnedEnemy = SpawnNode->ActivateSpawn();
+			OnEnemySpawned(SpawnedEnemy, SpawnNode, CurrentEnemyIndex, CurrentWave, CurrentWaveBurst);
+			
 		}
 		else
 		{

@@ -8,6 +8,7 @@
 #include "RBShooterGameModeBase.generated.h"
 
 class AEnemySpawnNode;
+class AEnemy;
 
 /**
  * 
@@ -60,9 +61,15 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Wave Management")
 	void OnBurstCompleted(int32 WaveNumber, int32 BurstNumber);
 
+	/* Called when an enemy is spawned during a burst. */
+	UFUNCTION(BlueprintImplementableEvent, Category="Wave Management")
+	void OnEnemySpawned(AEnemy* Enemy, AEnemySpawnNode* SpawnNode, int32 EnemyIndex, int32 WaveNumber, int32 BurstNumber);
+
+	/* Starts the game if current level has 1 or more spawn nodes */
 	UFUNCTION(BlueprintCallable, Category="Wave Management")
 	bool StartGameIfPossible(float TimeUntilFirstBurst = 0.0f);
 
+	/* Stops and resets wave number to 1 & does a re-cache of all enemy spawn nodes in the level */
 	UFUNCTION(BlueprintCallable, Category="Wave Management")
 	void ResetToDefault();
 
@@ -91,6 +98,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Wave Management")
 	int32 CurrentWaveBurst;
+
+	UPROPERTY(BlueprintReadOnly, Category="Wave Management")
+	int32 NumCurrentEnemiesPendingSpawn;
 
 	UPROPERTY(BlueprintReadOnly, Category="Wave Management")
 	bool bWaveActive;
@@ -127,7 +137,6 @@ private:
 	bool bFirstBurstDelayActive;
 
 	int32 NumNextBurstEnemies;
-	int32 NumCurrentEnemiesPendingSpawn;
 
 	FTimerHandle InitialWaveBurstTimer;
 };
