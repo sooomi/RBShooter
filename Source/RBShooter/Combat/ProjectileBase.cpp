@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "TimerManager.h"
 #include "Enemy/Enemy.h"
+#include "Player/Weapon.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -19,7 +20,8 @@ AProjectileBase::AProjectileBase()
 	RootComponent = EditorSphereComponent;
 
 	MaxLifeTime = 20.0f;
-	ProjectileDamage = 1.0f;
+	BaseDamage = 1.0f;
+	DamageBonus = 0.0f;
 	ChargeAmount = 0.0f;
 }
 
@@ -44,9 +46,17 @@ void AProjectileBase::Tick(float DeltaTime)
 
 }
 
-void AProjectileBase::Fire(ACharacter* CharOwner)
+float AProjectileBase::GetDamage()
+{
+	return BaseDamage + DamageBonus;
+}
+
+void AProjectileBase::Fire(ACharacter* CharOwner, AWeapon* Weapon)
 {
 	CharacterOwner = CharOwner;
+	WeaponOwner = Weapon;
+
+	DamageBonus = WeaponOwner->GetDamage(ProjectileType);
 
 	OnProjectileFired();
 }
@@ -58,11 +68,11 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* OverlappedComponent, 
 	{
 		if (EnemyActor->EnemyType == ProjectileType) // Colors match
 		{
-			OnProjectileHitEnemy(EnemyActor, true, ProjectileDamage);
+			OnProjectileHitEnemy(EnemyActor, true, GetDamage());
 		}
 		else // Colors don't match
 		{
-			OnProjectileHitEnemy(EnemyActor, false, ProjectileDamage);
+			OnProjectileHitEnemy(EnemyActor, false, GetDamage());
 		}
 	}
 	else

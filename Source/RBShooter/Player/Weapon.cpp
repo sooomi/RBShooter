@@ -19,6 +19,10 @@ AWeapon::AWeapon()
 
 	MaxChargeDuration = 3.0f;
 	bIsChargingWeapon = false;
+
+	DamageRed = 0.0f;
+	DamageBlue = 0.0f;
+	DamageGeneric = 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -38,6 +42,20 @@ void AWeapon::BeginPlay()
 void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+float AWeapon::GetDamage(EColorTypes ColorType)
+{
+	if (ColorType == EColorTypes::CT_Red)
+	{
+		return DamageGeneric + DamageRed;
+	}
+	else if (ColorType == EColorTypes::CT_Blue)
+	{
+		return DamageGeneric + DamageBlue;
+	}
+
+	return DamageGeneric;
 }
 
 bool AWeapon::LoadProjectile(EColorTypes ProjectileType)
