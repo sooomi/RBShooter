@@ -55,6 +55,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
 	float DamageGeneric;
 
+	UPROPERTY(BlueprintReadWrite, Category="Weapon Fire")
+	bool bWantsToFireMagnetProjectile;
+
 private: // Weapon charging
 
 	UPROPERTY(EditAnywhere, Category="Weapon Charging")
