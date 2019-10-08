@@ -41,32 +41,28 @@ void AEnemyMagnetEffect::Tick(float DeltaTime)
 void AEnemyMagnetEffect::AttractEnemies(float DeltaTime)
 {
 	// Outer
-	TArray<AActor*> OuterOverlappingEnemies;
-	CachedOuterSphereComponent->GetOverlappingActors(OuterOverlappingEnemies, AEnemy::StaticClass());
-
-	for (int32 i = 0; i < OuterOverlappingEnemies.Num(); i++)
-	{
-		AEnemy* Enemy = Cast<AEnemy>(OuterOverlappingEnemies[i]);
-		if (Enemy && Enemy->EnemyType == EnemyType)
-		{
-			FVector Position(Enemy->GetActorLocation());
-
-			Enemy->SetActorLocation(FMath::Lerp(Position, GetActorLocation(), DeltaTime * OuterAttractionPull));
-		}
-	}
+	AttractFromSphere(CachedOuterSphereComponent, DeltaTime, OuterAttractionPull);
 
 	// Inner
-	TArray<AActor*> InnerOverlappingEnemies;
-	CachedInnerSphereComponent->GetOverlappingActors(InnerOverlappingEnemies, AEnemy::StaticClass());
+	AttractFromSphere(CachedInnerSphereComponent, DeltaTime, InnerAttractionPull);
+}
 
-	for (int32 i = 0; i < InnerOverlappingEnemies.Num(); i++)
+void AEnemyMagnetEffect::AttractFromSphere(USphereComponent* SphereComponent, float DeltaTime, float AttractionPull)
+{
+	if (SphereComponent)
 	{
-		AEnemy* Enemy = Cast<AEnemy>(InnerOverlappingEnemies[i]);
-		if (Enemy && Enemy->EnemyType == EnemyType)
-		{
-			FVector Position(Enemy->GetActorLocation());
+		TArray<AActor*> OverLappingEnemies;
+		SphereComponent->GetOverlappingActors(OverLappingEnemies, AEnemy::StaticClass());
 
-			Enemy->SetActorLocation(FMath::Lerp(Position, GetActorLocation(), DeltaTime * InnerAttractionPull));
+		for (int32 i = 0; i < OverLappingEnemies.Num(); i++)
+		{
+			AEnemy* Enemy = Cast<AEnemy>(OverLappingEnemies[i]);
+			if (Enemy && (Enemy->EnemyType == EnemyType || EnemyType == EColorTypes::CT_None))
+			{
+				FVector Position(Enemy->GetActorLocation());
+
+				Enemy->SetActorLocation(FMath::Lerp(Position, GetActorLocation(), DeltaTime * AttractionPull));
+			}
 		}
 	}
 }
