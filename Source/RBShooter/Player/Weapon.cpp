@@ -23,6 +23,8 @@ AWeapon::AWeapon()
 	DamageRed = 0.0f;
 	DamageBlue = 0.0f;
 	DamageGeneric = 0.0f;
+
+	bWantsToFireMagnetProjectile = false;
 }
 
 // Called when the game starts or when spawned

@@ -31,7 +31,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="Magnet")
 	UCurveFloat* PullCurve;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Magnet")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"), Category="Magnet")
 	EColorTypes EnemyType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Magnet")
