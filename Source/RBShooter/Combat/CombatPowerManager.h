@@ -30,6 +30,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Timer Management")
 	float GetTimeLeftPercentage(EColorTypes EnemyType);
 
+	UFUNCTION(BlueprintPure, Category="Bomb Point")
+	bool HasBombPoint(int32 Amount = 1);
+
 	/* Increases the timer for specified enemy color by Amount. Starts timer if not started. @return True if timer was started, false if only incremented. */
 	UFUNCTION(BlueprintCallable, Category="Timer Management")
 	bool IncreaseTimer(float Amount, EColorTypes EnemyType);

@@ -61,6 +61,16 @@ float ACombatPowerManager::GetTimeLeftPercentage(EColorTypes EnemyType)
 	return TimeLeftPercentage;
 }
 
+bool ACombatPowerManager::HasBombPoint(int32 Amount)
+{
+	if (NumBombPoints >= Amount)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 bool ACombatPowerManager::IncreaseTimer(float Amount, EColorTypes EnemyType)
 {
 	// Set the appropriate timer handle ptr depending on type
