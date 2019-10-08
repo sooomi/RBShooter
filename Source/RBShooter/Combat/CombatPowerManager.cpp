@@ -12,6 +12,10 @@ ACombatPowerManager::ACombatPowerManager()
 
 	MaxTime = 10.0f;
 	NumBombPoints = 0;
+	MaxNumBombPoints = 3;
+
+	NumRedTimerIncreases = 0;
+	NumBlueTimerIncreases = 0;
 }
 
 // Called when the game starts or when spawned
@@ -65,13 +69,15 @@ bool ACombatPowerManager::IncreaseTimer(float Amount, EColorTypes EnemyType)
 	if (EnemyType == EColorTypes::CT_Red)
 	{
 		TimerHandleToUse = &EnemyKillTimerHandleRed;
+		NumRedTimerIncreases++;
 	}
 	else if (EnemyType == EColorTypes::CT_Blue)
 	{
 		TimerHandleToUse = &EnemyKillTimerHandleBlue;
+		NumBlueTimerIncreases++;
 	}
 
-	// Get if timer was activate
+	// Get if timer was active
 	bool bTimerActive = GetWorldTimerManager().IsTimerActive(*TimerHandleToUse);
 
 	// Calculate new time for timer based on current elapsed time
@@ -100,14 +106,43 @@ bool ACombatPowerManager::IncreaseTimer(float Amount, EColorTypes EnemyType)
 	return bTimerActive;
 }
 
-void ACombatPowerManager::AddBombPoint()
+bool ACombatPowerManager::AddBombPoint()
 {
-	NumBombPoints++;
-	OnBombPointAdded(NumBombPoints);
+	if (NumBombPoints < MaxNumBombPoints)
+	{
+		NumBombPoints = FMath::Clamp(++NumBombPoints, 0, MaxNumBombPoints);
+		OnBombPointAdded(NumBombPoints);
+
+		return true;
+	}
+
+	return false;
+}
+
+bool ACombatPowerManager::RemoveBombPoint()
+{
+	if (NumBombPoints > 0)
+	{
+		NumBombPoints = FMath::Clamp(--NumBombPoints, 0, MaxNumBombPoints);
+		OnBombPointRemoved(NumBombPoints);
+
+		return true;
+	}
+
+	return false;
 }
 
 void ACombatPowerManager::EnemyKillTimerUpdate(EColorTypes EnemyType)
 {
+	if (EnemyType == EColorTypes::CT_Red)
+	{
+		NumRedTimerIncreases = 0;
+	}
+	else if (EnemyType == EColorTypes::CT_Blue)
+	{
+		NumBlueTimerIncreases = 0;
+	}
+
 	OnTimerEnded(EnemyType);
 }
 

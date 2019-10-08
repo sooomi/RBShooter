@@ -34,19 +34,43 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Timer Management")
 	bool IncreaseTimer(float Amount, EColorTypes EnemyType);
 
+	/* Adds 1 Bomb Point. @return True if added, false if bomb point amount was at max */
+	UFUNCTION(BlueprintCallable, Category = "Bomb Point")
+	bool AddBombPoint();
+
+	/* Removes 1 Bomb Point. @return True if removed, false if bomb point amount was already 0 */
+	UFUNCTION(BlueprintCallable, Category = "Bomb Point")
+	bool RemoveBombPoint();
+
+	/* Called when IncreaseTimer is called. */
 	UFUNCTION(BlueprintImplementableEvent, Category="Timer Callbacks")
 	void OnTimerStarted(EColorTypes EnemyType);
 
+	/* Called when the current streak timer runs out. */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Timer Callbacks")
 	void OnTimerEnded(EColorTypes EnemyType);
 
+	/* Called when a Bomb Point is added. */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Timer Callbacks")
 	void OnBombPointAdded(UPARAM(DisplayName = "Number of Bomb Points") int32 NumPoints);
 
+	/* Called when a Bomb Point is removed. */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Timer Callbacks")
+	void OnBombPointRemoved(UPARAM(DisplayName = "Number of Bomb Points") int32 NumPoints);
+
 public:
 
-	UPROPERTY(BlueprintReadOnly, DisplayName="Number of Bomb Points",Category="Combat Values")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName = "Max Number of Bomb Points", Category = "Combat Values")
+	int32 MaxNumBombPoints;
+
+	UPROPERTY(BlueprintReadOnly, DisplayName="Number of Bomb Points", Category="Combat Values")
 	int32 NumBombPoints;
+
+	UPROPERTY(BlueprintReadOnly, DisplayName = "Number of Red Timer Increases", Category = "Combat Values")
+	int32 NumRedTimerIncreases;
+
+	UPROPERTY(BlueprintReadOnly, DisplayName = "Number of Blue Timer Increases", Category = "Combat Values")
+	int32 NumBlueTimerIncreases;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat Values")
 	float MaxTime;
@@ -54,13 +78,12 @@ public:
 private:
 
 	FTimerHandle EnemyKillTimerHandleRed;
+
 	FTimerHandle EnemyKillTimerHandleBlue;
 
 private:
 
 	UFUNCTION()
 	void EnemyKillTimerUpdate(EColorTypes EnemyType);
-
-	void AddBombPoint();
 
 };
