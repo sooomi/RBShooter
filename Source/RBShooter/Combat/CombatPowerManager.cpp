@@ -34,18 +34,10 @@ void ACombatPowerManager::Tick(float DeltaTime)
 
 float ACombatPowerManager::GetTimeLeft(EColorTypes EnemyType)
 {
-	float Elapsed = 0.0f;
-	float TimerRate = 0.0f;
-	if (EnemyType == EColorTypes::CT_Red)
-	{
-		Elapsed = GetWorldTimerManager().GetTimerElapsed(EnemyKillTimerHandleRed);
-		TimerRate = GetWorldTimerManager().GetTimerRate(EnemyKillTimerHandleRed);
-	}
-	else if (EnemyType == EColorTypes::CT_Blue)
-	{
-		Elapsed = GetWorldTimerManager().GetTimerElapsed(EnemyKillTimerHandleBlue);
-		TimerRate = GetWorldTimerManager().GetTimerRate(EnemyKillTimerHandleBlue);
-	}
+	FTimerHandle& RelevantTimerHandle = GetTimerHandleFromColor(EnemyType);
+
+	float Elapsed = GetWorldTimerManager().GetTimerElapsed(RelevantTimerHandle);
+	float TimerRate = GetWorldTimerManager().GetTimerRate(RelevantTimerHandle);
 
 	float TimeLeft = TimerRate - Elapsed;
 
@@ -73,26 +65,24 @@ bool ACombatPowerManager::HasBombPoint(int32 Amount)
 
 bool ACombatPowerManager::IncreaseTimer(float Amount, EColorTypes EnemyType)
 {
-	// Set the appropriate timer handle ptr depending on type
-	FTimerHandle* TimerHandleToUse = nullptr;
-
 	if (EnemyType == EColorTypes::CT_Red)
 	{
-		TimerHandleToUse = &EnemyKillTimerHandleRed;
 		NumRedTimerIncreases++;
 	}
 	else if (EnemyType == EColorTypes::CT_Blue)
 	{
-		TimerHandleToUse = &EnemyKillTimerHandleBlue;
 		NumBlueTimerIncreases++;
 	}
 
+	// Get the appropriate timer handle from type
+	FTimerHandle& RelevantTimerHandle = GetTimerHandleFromColor(EnemyType);
+
 	// Get if timer was active
-	bool bTimerActive = GetWorldTimerManager().IsTimerActive(*TimerHandleToUse);
+	bool bTimerActive = GetWorldTimerManager().IsTimerActive(RelevantTimerHandle);
 
 	// Calculate new time for timer based on current elapsed time
-	float Elapsed = FMath::Max(GetWorldTimerManager().GetTimerElapsed(*TimerHandleToUse), 0.0f);
-	float TimerRate = FMath::Max(GetWorldTimerManager().GetTimerRate(*TimerHandleToUse), 0.0f);
+	float Elapsed = FMath::Max(GetWorldTimerManager().GetTimerElapsed(RelevantTimerHandle), 0.0f);
+	float TimerRate = FMath::Max(GetWorldTimerManager().GetTimerRate(RelevantTimerHandle), 0.0f);
 	float NewTime = (TimerRate - Elapsed) + Amount;
 
 	// If new time exceeds max time, deduct MaxTime and add one bomb point
@@ -106,7 +96,7 @@ bool ACombatPowerManager::IncreaseTimer(float Amount, EColorTypes EnemyType)
 	UE_LOG(LogTemp, Warning, TEXT("NewTime %f"), NewTime);
 	FTimerDelegate TimerDel;
 	TimerDel.BindUFunction(this, FName("EnemyKillTimerUpdate"), EnemyType);
-	GetWorldTimerManager().SetTimer(*TimerHandleToUse, TimerDel, NewTime, false, -1.0f);
+	GetWorldTimerManager().SetTimer(RelevantTimerHandle, TimerDel, NewTime, false, -1.0f);
 
 	if (bTimerActive)
 	{
@@ -154,5 +144,19 @@ void ACombatPowerManager::EnemyKillTimerUpdate(EColorTypes EnemyType)
 	}
 
 	OnTimerEnded(EnemyType);
+}
+
+FTimerHandle& ACombatPowerManager::GetTimerHandleFromColor(EColorTypes ColorType)
+{
+	if (ColorType == EColorTypes::CT_Red)
+	{
+		return EnemyKillTimerHandleRed;
+	}
+	else if (ColorType == EColorTypes::CT_Blue)
+	{
+		return EnemyKillTimerHandleBlue;
+	}
+
+	return EnemyKillTimerHandleRed;
 }
 

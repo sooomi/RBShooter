@@ -89,4 +89,6 @@ private:
 	UFUNCTION()
 	void EnemyKillTimerUpdate(EColorTypes EnemyType);
 
+	FTimerHandle& GetTimerHandleFromColor(EColorTypes ColorType);
+
 };
