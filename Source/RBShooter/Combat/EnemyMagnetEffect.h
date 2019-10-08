@@ -53,4 +53,5 @@ private:
 private:
 
 	void AttractEnemies(float DeltaTime);
+	void AttractFromSphere(USphereComponent* SphereComponent, float DeltaTime, float AttractionPull);
 };
