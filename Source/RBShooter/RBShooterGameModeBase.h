@@ -112,6 +112,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Wave Management")
 	bool bWaitForEnemiesToDie;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Wave Management")
+	bool bIsWaitingForEnemiesToDie;
+
 	/* Number of enemies killed by player during current wave */
 	UPROPERTY(BlueprintReadWrite, Category="Player Stats")
 	FKillCount KillCountThisWave;
@@ -146,7 +149,6 @@ private:
 	float CurrentSpawnInterval;
 	
 	bool bFirstBurstDelayActive;
-	bool bIsWaitingForEnemiesToDie;
 
 	int32 NumNextBurstEnemies;
 	int32 NumTotalEnemiesSpawnedThisWave;
