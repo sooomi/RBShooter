@@ -9,10 +9,11 @@
 
 ARBShooterGameModeBase::ARBShooterGameModeBase()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	bGameActive = false;
 	bFirstBurstDelayActive = false;
+	bWaitForEnemiesToDie = false;
 
 	ResetWaveVariables();
 }
@@ -33,18 +34,26 @@ void ARBShooterGameModeBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	// TODO enable tick in constructor before using this
+	if (bIsWaitingForEnemiesToDie)
+	{
+		if (AttemptToStartNextWave())
+		{
+			bIsWaitingForEnemiesToDie = false;
+		}
+	}
 }
 
 void ARBShooterGameModeBase::ResetWaveVariables()
 {
 	bWaveActive = false;
+	bIsWaitingForEnemiesToDie = false;
 	CurrentBurstDuration = 0.0f;
 	CurrentBurstPauseDuration = 0.0f;
 	CurrentWaveDuration = 0.0f;
 	CurrentSpawnInterval = 0.0f;
 	NumNextBurstEnemies = 0;
 	NumCurrentEnemiesPendingSpawn = 0;
+	NumTotalEnemiesSpawnedThisWave = 0;
 	CurrentWave = 0;
 	CurrentWaveBurst = 0;
 }
@@ -83,6 +92,8 @@ bool ARBShooterGameModeBase::StartWave(int32 NumberOfBursts, float BurstDuration
 	if (!bWaveActive)
 	{
 		bWaveActive = true;
+		NumTotalEnemiesSpawnedThisWave = 0;
+		UGameUtility::ResetKillcount(DeadEnemyCountThisWave);
 
 		CurrentWave++;
 		CurrentWaveBurst = 0;
@@ -96,8 +107,6 @@ bool ARBShooterGameModeBase::StartWave(int32 NumberOfBursts, float BurstDuration
 		CurrentWaveDuration = WaveDuration;
 
 		UGameUtility::ResetKillcount(KillCountThisWave);
-
-		UE_LOG(LogTemp, Warning, TEXT("Starting Wave. Number of bursts %i Burst Duration %f Pause %f Wave Duration %f"), NumberOfBursts, BurstDuration, BurstPauseDuration, WaveDuration);
 
 		// Start wave timer
 		GetWorldTimerManager().SetTimer(WaveTimerHandle, this, &ARBShooterGameModeBase::WaveTimerUpdate, WaveDuration, false, -1.0f);
@@ -151,7 +160,7 @@ bool ARBShooterGameModeBase::StartBurst(int32 NumEnemiesToSpawn)
 			// Start the burst spawn timer
 			NumCurrentEnemiesPendingSpawn = NumEnemiesToSpawn;
 			float BurstSpawnInterval = CurrentBurstDuration / (float)NumEnemiesToSpawn;
-			UE_LOG(LogTemp, Warning, TEXT("Enemies %i Interval %f"), NumEnemiesToSpawn, BurstSpawnInterval);
+
 			GetWorldTimerManager().SetTimer(BurstSpawnTimerHandle, this, &ARBShooterGameModeBase::BurstSpawnTimerUpdate, BurstSpawnInterval, true, 0.0f);
 
 			return true;
@@ -250,6 +259,30 @@ bool ARBShooterGameModeBase::CanEnemyNodeBeSpawned(AEnemySpawnNode* SpawnNode)
 	return false;
 }
 
+bool ARBShooterGameModeBase::AttemptToStartNextWave()
+{
+	if (bWaitForEnemiesToDie)
+	{
+		// Check if dead enemy count this wave is equal to number of enemies that were spawned
+		if (DeadEnemyCountThisWave.KillCountTotal >= NumTotalEnemiesSpawnedThisWave)
+		{
+			// Start next wave
+			OnNextWaveReady(CurrentWave);
+			return true;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Waiting for all enemies to die before starting wave"));
+			return false;
+		}
+	}
+
+	// Start next wave since we're not waiting for enemies to die first
+	OnNextWaveReady(CurrentWave);
+
+	return true;
+}
+
 void ARBShooterGameModeBase::ActivateNextEnemyNode()
 {
 	if (NumCurrentEnemiesPendingSpawn > 0)
@@ -261,6 +294,7 @@ void ARBShooterGameModeBase::ActivateNextEnemyNode()
 		if (SpawnNode)
 		{
 			AEnemy* SpawnedEnemy = SpawnNode->ActivateSpawn();
+			NumTotalEnemiesSpawnedThisWave++;
 			OnEnemySpawned(SpawnedEnemy, SpawnNode, CurrentEnemyIndex, CurrentWave, CurrentWaveBurst);
 			
 		}
@@ -285,9 +319,11 @@ void ARBShooterGameModeBase::WaveTimerUpdate()
 	float TimeElapsed = GetWorldTimerManager().GetTimerElapsed(WaveTimerHandle);
 	OnWaveCompleted(CurrentWave, CurrentWaveBurst);
 
-	OnNextWaveReady(CurrentWave);
-
-	UE_LOG(LogTemp, Warning, TEXT("WaveTimerUpdate"));
+	bool bWasStarted = AttemptToStartNextWave();
+	if (!bWasStarted)
+	{
+		bIsWaitingForEnemiesToDie = true;
+	}
 }
 
 void ARBShooterGameModeBase::BurstTimerUpdate()
@@ -295,15 +331,11 @@ void ARBShooterGameModeBase::BurstTimerUpdate()
 	StopBurst();
 	OnBurstCompleted(CurrentWave, CurrentWaveBurst);
 	OnNextBurstReady(CurrentWave, CurrentWaveBurst);
-
-	UE_LOG(LogTemp, Warning, TEXT("BurstTimerUpdate"));
 }
 
 void ARBShooterGameModeBase::BurstSpawnTimerUpdate()
 {
 	ActivateNextEnemyNode();
-
-	UE_LOG(LogTemp, Warning, TEXT("BurstSpawnTimerUpdate %i"), NumCurrentEnemiesPendingSpawn);
 }
 
 void ARBShooterGameModeBase::FirstBurstDelayTimerUpdate()
