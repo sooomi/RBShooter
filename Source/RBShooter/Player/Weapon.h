@@ -73,7 +73,7 @@ private: // Weapon charging
 private: // Rate of fire
 
 	UPROPERTY(EditAnywhere, Category="Weapon Fire")
-	float RateOfFire;
+	float FireInterval;
 
 	FTimerHandle RoFTimerHandle;
 
