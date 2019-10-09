@@ -25,49 +25,56 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintPure, Category="Timer Management")
-	float GetTimeLeft(EColorTypes EnemyType);
+	float GetTimeLeft(EColorTypes ColorType);
 
 	UFUNCTION(BlueprintPure, Category = "Timer Management")
-	float GetTimeLeftPercentage(EColorTypes EnemyType);
+	float GetTimeLeftPercentage(EColorTypes ColorType);
 
 	UFUNCTION(BlueprintPure, Category="Bomb Point")
-	bool HasBombPoint(int32 Amount = 1);
+	bool HasBombPoint(EColorTypes ColorType, int32 Amount = 1);
 
 	/* Increases the timer for specified enemy color by Amount. Starts timer if not started. @return True if timer was started, false if only incremented. */
 	UFUNCTION(BlueprintCallable, Category="Timer Management")
-	bool IncreaseTimer(float Amount, EColorTypes EnemyType);
+	bool IncreaseTimer(float Amount, EColorTypes ColorType);
 
 	/* Adds 1 Bomb Point. @return True if added, false if bomb point amount was at max */
 	UFUNCTION(BlueprintCallable, Category = "Bomb Point")
-	bool AddBombPoint();
+	bool AddBombPoint(EColorTypes ColorType);
 
 	/* Removes 1 Bomb Point. @return True if removed, false if bomb point amount was already 0 */
 	UFUNCTION(BlueprintCallable, Category = "Bomb Point")
-	bool RemoveBombPoint();
+	bool RemoveBombPoint(EColorTypes ColorType);
 
-	/* Called when IncreaseTimer is called. */
+	/* Called when timer is started for the first timer. */
 	UFUNCTION(BlueprintImplementableEvent, Category="Timer Callbacks")
-	void OnTimerStarted(EColorTypes EnemyType);
+	void OnTimerStarted(EColorTypes ColorType);
+
+	/* Called when timer is updated. */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Timer Callbacks")
+	void OnTimerUpdated(EColorTypes ColorType);
 
 	/* Called when the current streak timer runs out. */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Timer Callbacks")
-	void OnTimerEnded(EColorTypes EnemyType);
+	void OnTimerEnded(EColorTypes ColorType);
 
 	/* Called when a Bomb Point is added. */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Timer Callbacks")
-	void OnBombPointAdded(UPARAM(DisplayName = "Number of Bomb Points") int32 NumPoints);
+	void OnBombPointAdded(EColorTypes ColorType, UPARAM(DisplayName = "Number of Bomb Points") int32 NumPoints);
 
 	/* Called when a Bomb Point is removed. */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Timer Callbacks")
-	void OnBombPointRemoved(UPARAM(DisplayName = "Number of Bomb Points") int32 NumPoints);
+	void OnBombPointRemoved(EColorTypes ColorType, UPARAM(DisplayName = "Number of Bomb Points") int32 NumPoints);
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName = "Max Number of Bomb Points", Category = "Combat Values")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName = "Max Number of Bomb Points Per Color", Category = "Combat Values")
 	int32 MaxNumBombPoints;
 
-	UPROPERTY(BlueprintReadOnly, DisplayName="Number of Bomb Points", Category="Combat Values")
-	int32 NumBombPoints;
+	UPROPERTY(BlueprintReadOnly, DisplayName="Number of Red Bomb Points", Category="Combat Values")
+	int32 NumRedBombPoints;
+
+	UPROPERTY(BlueprintReadOnly, DisplayName = "Number of Blue Bomb Points", Category = "Combat Values")
+	int32 NumBlueBombPoints;
 
 	UPROPERTY(BlueprintReadOnly, DisplayName = "Number of Red Timer Increases", Category = "Combat Values")
 	int32 NumRedTimerIncreases;
@@ -87,8 +94,10 @@ private:
 private:
 
 	UFUNCTION()
-	void EnemyKillTimerUpdate(EColorTypes EnemyType);
+	void EnemyKillTimerUpdate(EColorTypes ColorType);
 
 	FTimerHandle& GetTimerHandleFromColor(EColorTypes ColorType);
+
+	int32& GetPointValueFromColor(EColorTypes ColorType);
 
 };

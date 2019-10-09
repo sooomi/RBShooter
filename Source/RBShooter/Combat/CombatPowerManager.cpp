@@ -11,7 +11,9 @@ ACombatPowerManager::ACombatPowerManager()
 	PrimaryActorTick.bCanEverTick = true;
 
 	MaxTime = 10.0f;
-	NumBombPoints = 0;
+	
+	NumRedBombPoints = 0;
+	NumBlueBombPoints = 0;
 	MaxNumBombPoints = 3;
 
 	NumRedTimerIncreases = 0;
@@ -32,9 +34,9 @@ void ACombatPowerManager::Tick(float DeltaTime)
 
 }
 
-float ACombatPowerManager::GetTimeLeft(EColorTypes EnemyType)
+float ACombatPowerManager::GetTimeLeft(EColorTypes ColorType)
 {
-	FTimerHandle& RelevantTimerHandle = GetTimerHandleFromColor(EnemyType);
+	FTimerHandle& RelevantTimerHandle = GetTimerHandleFromColor(ColorType);
 
 	float Elapsed = GetWorldTimerManager().GetTimerElapsed(RelevantTimerHandle);
 	float TimerRate = GetWorldTimerManager().GetTimerRate(RelevantTimerHandle);
@@ -44,18 +46,18 @@ float ACombatPowerManager::GetTimeLeft(EColorTypes EnemyType)
 	return TimeLeft;
 }
 
-float ACombatPowerManager::GetTimeLeftPercentage(EColorTypes EnemyType)
+float ACombatPowerManager::GetTimeLeftPercentage(EColorTypes ColorType)
 {
-	float TimeLeft = GetTimeLeft(EnemyType);
+	float TimeLeft = GetTimeLeft(ColorType);
 
 	float TimeLeftPercentage = TimeLeft / MaxTime;
 
 	return TimeLeftPercentage;
 }
 
-bool ACombatPowerManager::HasBombPoint(int32 Amount)
+bool ACombatPowerManager::HasBombPoint(EColorTypes ColorType, int32 Amount)
 {
-	if (NumBombPoints >= Amount)
+	if (GetPointValueFromColor(ColorType) >= Amount)
 	{
 		return true;
 	}
@@ -63,19 +65,19 @@ bool ACombatPowerManager::HasBombPoint(int32 Amount)
 	return false;
 }
 
-bool ACombatPowerManager::IncreaseTimer(float Amount, EColorTypes EnemyType)
+bool ACombatPowerManager::IncreaseTimer(float Amount, EColorTypes ColorType)
 {
-	if (EnemyType == EColorTypes::CT_Red)
+	if (ColorType == EColorTypes::CT_Red)
 	{
 		NumRedTimerIncreases++;
 	}
-	else if (EnemyType == EColorTypes::CT_Blue)
+	else if (ColorType == EColorTypes::CT_Blue)
 	{
 		NumBlueTimerIncreases++;
 	}
 
 	// Get the appropriate timer handle from type
-	FTimerHandle& RelevantTimerHandle = GetTimerHandleFromColor(EnemyType);
+	FTimerHandle& RelevantTimerHandle = GetTimerHandleFromColor(ColorType);
 
 	// Get if timer was active
 	bool bTimerActive = GetWorldTimerManager().IsTimerActive(RelevantTimerHandle);
@@ -89,29 +91,34 @@ bool ACombatPowerManager::IncreaseTimer(float Amount, EColorTypes EnemyType)
 	if (NewTime >= MaxTime)
 	{
 		NewTime -= MaxTime;
-		AddBombPoint();
+		AddBombPoint(ColorType);
 	}
 
 	// Set the timer
 	UE_LOG(LogTemp, Warning, TEXT("NewTime %f"), NewTime);
 	FTimerDelegate TimerDel;
-	TimerDel.BindUFunction(this, FName("EnemyKillTimerUpdate"), EnemyType);
+	TimerDel.BindUFunction(this, FName("EnemyKillTimerUpdate"), ColorType);
 	GetWorldTimerManager().SetTimer(RelevantTimerHandle, TimerDel, NewTime, false, -1.0f);
 
 	if (bTimerActive)
 	{
-		OnTimerStarted(EnemyType);
+		OnTimerUpdated(ColorType);
+	}
+	else
+	{
+		OnTimerStarted(ColorType);
 	}
 
 	return bTimerActive;
 }
 
-bool ACombatPowerManager::AddBombPoint()
+bool ACombatPowerManager::AddBombPoint(EColorTypes ColorType)
 {
-	if (NumBombPoints < MaxNumBombPoints)
+	int32& PointValue = GetPointValueFromColor(ColorType);
+	if (PointValue < MaxNumBombPoints)
 	{
-		NumBombPoints = FMath::Clamp(++NumBombPoints, 0, MaxNumBombPoints);
-		OnBombPointAdded(NumBombPoints);
+		PointValue = FMath::Clamp(++PointValue, 0, MaxNumBombPoints);
+		OnBombPointAdded(ColorType, PointValue);
 
 		return true;
 	}
@@ -119,12 +126,13 @@ bool ACombatPowerManager::AddBombPoint()
 	return false;
 }
 
-bool ACombatPowerManager::RemoveBombPoint()
+bool ACombatPowerManager::RemoveBombPoint(EColorTypes ColorType)
 {
-	if (NumBombPoints > 0)
+	int32& PointValue = GetPointValueFromColor(ColorType);
+	if (PointValue > 0)
 	{
-		NumBombPoints = FMath::Clamp(--NumBombPoints, 0, MaxNumBombPoints);
-		OnBombPointRemoved(NumBombPoints);
+		PointValue = FMath::Clamp(--PointValue, 0, MaxNumBombPoints);
+		OnBombPointRemoved(ColorType, PointValue);
 
 		return true;
 	}
@@ -132,18 +140,18 @@ bool ACombatPowerManager::RemoveBombPoint()
 	return false;
 }
 
-void ACombatPowerManager::EnemyKillTimerUpdate(EColorTypes EnemyType)
+void ACombatPowerManager::EnemyKillTimerUpdate(EColorTypes ColorType)
 {
-	if (EnemyType == EColorTypes::CT_Red)
+	if (ColorType == EColorTypes::CT_Red)
 	{
 		NumRedTimerIncreases = 0;
 	}
-	else if (EnemyType == EColorTypes::CT_Blue)
+	else if (ColorType == EColorTypes::CT_Blue)
 	{
 		NumBlueTimerIncreases = 0;
 	}
 
-	OnTimerEnded(EnemyType);
+	OnTimerEnded(ColorType);
 }
 
 FTimerHandle& ACombatPowerManager::GetTimerHandleFromColor(EColorTypes ColorType)
@@ -158,5 +166,19 @@ FTimerHandle& ACombatPowerManager::GetTimerHandleFromColor(EColorTypes ColorType
 	}
 
 	return EnemyKillTimerHandleRed;
+}
+
+int32& ACombatPowerManager::GetPointValueFromColor(EColorTypes ColorType)
+{
+	if (ColorType == EColorTypes::CT_Red)
+	{
+		return NumRedBombPoints;
+	}
+	else if (ColorType == EColorTypes::CT_Blue)
+	{
+		return NumBlueBombPoints;
+	}
+
+	return NumRedBombPoints;
 }
 
