@@ -14,6 +14,8 @@ ARBShooterGameModeBase::ARBShooterGameModeBase()
 	bGameActive = false;
 	bFirstBurstDelayActive = false;
 	bWaitForEnemiesToDie = false;
+	bHasAttemptedToStartGame = false;
+	FirstBurstDelay = 0.0f;
 
 	ResetWaveVariables();
 }
@@ -28,6 +30,11 @@ void ARBShooterGameModeBase::BeginPlay()
 	Super::BeginPlay();
 
 	ResetToDefault();
+
+	if (bHasAttemptedToStartGame)
+	{
+		StartGameIfPossible(FirstBurstDelay);
+	}
 }
 
 void ARBShooterGameModeBase::Tick(float DeltaSeconds)
@@ -82,6 +89,9 @@ void ARBShooterGameModeBase::ResetWaveVariables()
 
 bool ARBShooterGameModeBase::StartGameIfPossible(float TimeUntilFirstBurst)
 {
+	FirstBurstDelay = TimeUntilFirstBurst;
+	bHasAttemptedToStartGame = true;
+
 	if (EnemySpawnNodes.Num() > 0)
 	{
 		bGameActive = true;
@@ -93,6 +103,8 @@ bool ARBShooterGameModeBase::StartGameIfPossible(float TimeUntilFirstBurst)
 			GetWorldTimerManager().SetTimer(InitialWaveBurstTimer, this, &ARBShooterGameModeBase::FirstBurstDelayTimerUpdate, TimeUntilFirstBurst, false, -1.0f);
 			bFirstBurstDelayActive = true;
 		}
+
+		bHasAttemptedToStartGame = false;
 
 		return true;
 	}
