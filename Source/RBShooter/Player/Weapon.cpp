@@ -14,7 +14,7 @@ AWeapon::AWeapon()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	RateOfFire = 0.2f;
+	FireInterval = 0.2f;
 	bCanFire = true;
 
 	MaxChargeDuration = 3.0f;
@@ -37,7 +37,7 @@ void AWeapon::BeginPlay()
 	CachedPlayerOwner = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
 	// Setup rate of fire timer
-	GetWorldTimerManager().SetTimer(RoFTimerHandle, this, &AWeapon::RateOfFireUpdate, RateOfFire, true, 0.0f);
+	GetWorldTimerManager().SetTimer(RoFTimerHandle, this, &AWeapon::RateOfFireUpdate, FireInterval, true, 0.0f);
 }
 
 // Called every frame

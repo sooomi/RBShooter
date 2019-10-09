@@ -108,15 +108,29 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Game")
 	bool bGameActive;
 
+	/* If we should wait for remaining enemies to die before starting a new wave */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Wave Management")
+	bool bWaitForEnemiesToDie;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Wave Management")
+	bool bIsWaitingForEnemiesToDie;
+
+	/* Number of enemies killed by player during current wave */
 	UPROPERTY(BlueprintReadWrite, Category="Player Stats")
 	FKillCount KillCountThisWave;
 
+	/* Total Number of enemies killed by player */
 	UPROPERTY(BlueprintReadWrite, Category = "Player Stats")
 	FKillCount KillCountTotal;
+
+	/* Number of enemies who died this wave. Not necessarily killed by player. */
+	UPROPERTY(BlueprintReadWrite, Category = "Wave Stats")
+	FKillCount DeadEnemyCountThisWave;
 
 private:
 
 	bool CanEnemyNodeBeSpawned(AEnemySpawnNode* SpawnNode);
+	bool AttemptToStartNextWave();
 
 	void ActivateNextEnemyNode();
 	void WaveTimerUpdate();
@@ -137,6 +151,7 @@ private:
 	bool bFirstBurstDelayActive;
 
 	int32 NumNextBurstEnemies;
+	int32 NumTotalEnemiesSpawnedThisWave;
 
 	FTimerHandle InitialWaveBurstTimer;
 };
