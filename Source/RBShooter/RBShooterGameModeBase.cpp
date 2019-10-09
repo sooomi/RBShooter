@@ -43,6 +43,28 @@ void ARBShooterGameModeBase::Tick(float DeltaSeconds)
 	}
 }
 
+float ARBShooterGameModeBase::GetWaveTimeLeft()
+{
+	float TimeElapsed = FMath::Max(GetWorldTimerManager().GetTimerElapsed(WaveTimerHandle), 0.0f);
+	return CurrentWaveDuration - TimeElapsed;
+}
+
+float ARBShooterGameModeBase::GetWaveTimeLeftPercent()
+{
+	return GetWaveTimeLeft() / CurrentWaveDuration;
+}
+
+float ARBShooterGameModeBase::GetBurstTimeLeft()
+{
+	float TimeElapsed = FMath::Max(GetWorldTimerManager().GetTimerElapsed(BurstTimerHandle), 0.0f);
+	return CurrentBurstDuration - TimeElapsed;
+}
+
+float ARBShooterGameModeBase::GetBurstTimeLeftPercent()
+{
+	return GetBurstTimeLeft() / CurrentBurstDuration;
+}
+
 void ARBShooterGameModeBase::ResetWaveVariables()
 {
 	bWaveActive = false;
@@ -111,6 +133,8 @@ bool ARBShooterGameModeBase::StartWave(int32 NumberOfBursts, float BurstDuration
 		// Start wave timer
 		GetWorldTimerManager().SetTimer(WaveTimerHandle, this, &ARBShooterGameModeBase::WaveTimerUpdate, WaveDuration, false, -1.0f);
 
+		OnWaveStarted(CurrentWave);
+
 		// Start first burst
 		if (!bFirstBurstDelayActive)
 		{
@@ -152,6 +176,8 @@ bool ARBShooterGameModeBase::StartBurst(int32 NumEnemiesToSpawn)
 		GetWorldTimerManager().SetTimer(BurstTimerHandle, this, &ARBShooterGameModeBase::BurstTimerUpdate, BurstInterval, false, -1.0f);
 
 		NumNextBurstEnemies = NumEnemiesToSpawn;
+
+		OnBurstStarted(CurrentWave, CurrentWaveBurst);
 
 		// Start burst enemy spawning
 		GetRandomEnemySpawnNodes(NumEnemiesToSpawn, SelectedEnemySpawnNodes);
