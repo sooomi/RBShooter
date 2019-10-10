@@ -25,6 +25,18 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
+	UFUNCTION(BlueprintPure, Category="Wave Management")
+	float GetWaveTimeLeft();
+
+	UFUNCTION(BlueprintPure, Category = "Wave Management")
+	float GetWaveTimeLeftPercent();
+
+	UFUNCTION(BlueprintPure, Category = "Wave Management")
+	float GetBurstTimeLeft();
+
+	UFUNCTION(BlueprintPure, Category = "Wave Management")
+	float GetBurstTimeLeftPercent();
+
 	/* Get randomly selected nodes from available nodes in the level */
 	UFUNCTION(BlueprintCallable, Category = "Enemy Spawning")
 	void GetRandomEnemySpawnNodes(UPARAM(DisplayName="Number of Nodes") int32 NumNodes, TArray<AActor*>& OutNodes);
@@ -45,11 +57,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Wave Management")
 	bool StopBurst();
 
-	/* When a wave is completed */
+	/* When a wave is started */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Wave Management")
+	void OnWaveStarted(int32 WaveNumber);
+
+	/* When a burst is started */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Wave Management")
+	void OnBurstStarted(int32 WaveNumber, int32 BurstNumber);
+
+	/* When a wave is completed and ready to start */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Wave Management")
 	void OnNextWaveReady(int32 WaveNumber);
 
-	/* When a burst is completed. A wave can consist of several bursts. */
+	/* When a burst is completed and ready to start. A wave can consist of several bursts. */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Wave Management")
 	void OnNextBurstReady(int32 WaveNumber, int32 BurstNumber);
 
