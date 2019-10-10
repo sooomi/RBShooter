@@ -25,6 +25,10 @@ AWeapon::AWeapon()
 	DamageGeneric = 0.0f;
 
 	bWantsToFireMagnetProjectile = false;
+	bFireImmediatelyMaxCharge = true;
+	bHasReachedMaxCharge = false;
+
+	CurrentChargeAmount = 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -95,12 +99,18 @@ bool AWeapon::TryToFireProjectile(EColorTypes ProjectileType)
 	// TODO check ammo amount
 	if (bCanFire)
 	{
-		float ChargeAmount = FMath::Max(0.0f, GetWorldTimerManager().GetTimerElapsed(ChargeTimerHandle));
-		OnFireProjectileConfirmed(ProjectileType, ChargeAmount);
+		if (!bHasReachedMaxCharge)
+		{
+			CurrentChargeAmount = FMath::Max(0.0f, GetWorldTimerManager().GetTimerElapsed(ChargeTimerHandle));
+		}
+
+		OnFireProjectileConfirmed(ProjectileType, CurrentChargeAmount);
 		bCanFire = false;
 
-		float ChargePercent = ChargeAmount / MaxChargeDuration;
+		float ChargePercent = CurrentChargeAmount / MaxChargeDuration;
 		OnProjectileReleased(ProjectileType, ChargePercent);
+
+		bHasReachedMaxCharge = false;
 
 		return true;
 	}
@@ -110,12 +120,15 @@ bool AWeapon::TryToFireProjectile(EColorTypes ProjectileType)
 
 void AWeapon::SetChargeTimer()
 {
-	GetWorldTimerManager().SetTimer(ChargeTimerHandle, this, &AWeapon::ChargeUpdate, MaxChargeDuration, true, -1.0f);
+	GetWorldTimerManager().SetTimer(ChargeTimerHandle, this, &AWeapon::ChargeUpdate, MaxChargeDuration, false, -1.0f);
 }
 
 void AWeapon::ChargeUpdate()
 {
-	if (bIsChargingWeapon)
+	bHasReachedMaxCharge = true;
+	CurrentChargeAmount = FMath::Max(0.0f, GetWorldTimerManager().GetTimerElapsed(ChargeTimerHandle));
+
+	if (bIsChargingWeapon && bFireImmediatelyMaxCharge)
 	{
 		TryToFireProjectile(ProjectileTypeToFire);
 	}

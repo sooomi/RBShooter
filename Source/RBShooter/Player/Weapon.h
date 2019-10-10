@@ -58,6 +58,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category="Weapon Fire")
 	bool bWantsToFireMagnetProjectile;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Fire Immediately Upon Reaching Max Charge"), Category="Weapon Fire")
+	bool bFireImmediatelyMaxCharge;
+
 private: // Weapon charging
 
 	UPROPERTY(EditAnywhere, Category="Weapon Charging")
@@ -66,6 +69,9 @@ private: // Weapon charging
 	FTimerHandle ChargeTimerHandle;
 
 	bool bIsChargingWeapon;
+	bool bHasReachedMaxCharge;
+
+	float CurrentChargeAmount;
 
 	void SetChargeTimer();
 	void ChargeUpdate();
