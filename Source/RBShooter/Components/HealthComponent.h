@@ -8,6 +8,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealthAddedDelegate, float, Health, AActor*, InvokeActor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealthRemovedDelegate, float, Health, AActor*, InvokeActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHealthChangedDelegate, float, Health, AActor*, InvokeActor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeathDelegate, AActor*, InvokeActor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FReviveDelegate, float, ReviveHealth, AActor*, InvokeActor);
 
@@ -31,6 +32,14 @@ public:
 	/* Returns the current health percentage relative to max health. Value is between 0 and 1. */
 	UFUNCTION(BlueprintPure, Category="Health Functions")
 	float GetHealthPercentage();
+
+	/* Set current health */
+	UFUNCTION(BlueprintCallable, Category = "Health Functions")
+	void SetHealth(float Health, AActor* InvokeActor);
+
+	/* Set max health */
+	UFUNCTION(BlueprintCallable, Category = "Health Functions")
+	void SetMaxHealth(float Health, AActor* InvokeActor);
 
 	/* Adds to current health */
 	UFUNCTION(BlueprintCallable, Category="Health Functions")
@@ -66,15 +75,23 @@ public:
 
 public: // Blueprint-specific events
 
+	/* On Current Health Added */
 	UPROPERTY(BlueprintAssignable, Category = "Health Event")
 	FHealthAddedDelegate OnHealthAdded;
 
+	/* On current health removed */
 	UPROPERTY(BlueprintAssignable, Category = "Health Event")
 	FHealthRemovedDelegate OnHealthRemoved;
 
+	/* On current or max health changed */
+	UPROPERTY(BlueprintAssignable, Category = "Health Event")
+	FHealthChangedDelegate OnHealthChanged;
+
+	/* On Death */
 	UPROPERTY(BlueprintAssignable, Category = "Health Event")
 	FDeathDelegate OnDeath;
 
+	/* On Revive */
 	UPROPERTY(BlueprintAssignable, Category = "Health Event")
 	FReviveDelegate OnRevive;
 

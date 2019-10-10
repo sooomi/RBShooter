@@ -25,6 +25,8 @@ void UHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	CurrentHealth = StartHealth;
+	ClampHealth();
+
 	bIsDead = bStartDead;
 }
 
@@ -41,6 +43,22 @@ float UHealthComponent::GetHealthPercentage()
 	return (float)CurrentHealth / (float)MaxHealth;
 }
 
+void UHealthComponent::SetHealth(float Health, AActor* InvokeActor)
+{
+	CurrentHealth = Health;
+	ClampHealth();
+
+	OnHealthChanged.Broadcast(CurrentHealth, InvokeActor);
+}
+
+void UHealthComponent::SetMaxHealth(float Health, AActor* InvokeActor)
+{
+	MaxHealth = Health;
+	ClampHealth();
+
+	OnHealthChanged.Broadcast(CurrentHealth, InvokeActor);
+}
+
 void UHealthComponent::AddHealth(float Health, AActor* InvokeActor /*= nullptr*/)
 {
 	if (!bIsDead)
@@ -49,6 +67,7 @@ void UHealthComponent::AddHealth(float Health, AActor* InvokeActor /*= nullptr*/
 
 		ClampHealth();
 		OnHealthAdded.Broadcast(Health, InvokeActor);
+		OnHealthChanged.Broadcast(CurrentHealth, InvokeActor);
 
 		if (CurrentHealth <= 0.0f)
 		{
@@ -64,6 +83,7 @@ void UHealthComponent::AddMaxHealth(float Health, AActor* InvokeActor /*= nullpt
 		MaxHealth += Health;
 
 		ClampHealth();
+		OnHealthChanged.Broadcast(CurrentHealth, InvokeActor);
 
 		if (CurrentHealth <= 0.0f)
 		{
@@ -86,6 +106,7 @@ void UHealthComponent::RemoveHealth(float Health, AActor* InvokeActor /*= nullpt
 
 		ClampHealth();
 		OnHealthRemoved.Broadcast(Health, InvokeActor);
+		OnHealthChanged.Broadcast(CurrentHealth, InvokeActor);
 
 		if (CurrentHealth <= 0.0f)
 		{
@@ -101,6 +122,7 @@ void UHealthComponent::RemoveMaxHealth(float Health, AActor* InvokeActor /*= nul
 		MaxHealth -= Health;
 
 		ClampHealth();
+		OnHealthChanged.Broadcast(CurrentHealth, InvokeActor);
 
 		if (CurrentHealth <= 0.0f)
 		{
@@ -130,7 +152,7 @@ void UHealthComponent::Revive(float ReviveStartHealth, AActor* InvokeActor /*= n
 {
 	if (bIsDead)
 	{
-		CurrentHealth = ReviveStartHealth;
+		SetHealth(ReviveStartHealth);
 		bIsDead = false;
 
 		ClampHealth();
