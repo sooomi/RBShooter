@@ -35,11 +35,11 @@ public:
 
 	/* Set current health */
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
-	void SetHealth(float Health, AActor* InvokeActor);
+	void SetHealth(float Health, AActor* InvokeActor = nullptr);
 
 	/* Set max health */
 	UFUNCTION(BlueprintCallable, Category = "Health Functions")
-	void SetMaxHealth(float Health, AActor* InvokeActor);
+	void SetMaxHealth(float Health, AActor* InvokeActor = nullptr);
 
 	/* Adds to current health */
 	UFUNCTION(BlueprintCallable, Category="Health Functions")

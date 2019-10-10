@@ -43,7 +43,7 @@ float UHealthComponent::GetHealthPercentage()
 	return (float)CurrentHealth / (float)MaxHealth;
 }
 
-void UHealthComponent::SetHealth(float Health, AActor* InvokeActor)
+void UHealthComponent::SetHealth(float Health, AActor* InvokeActor /*= nullptr*/)
 {
 	CurrentHealth = Health;
 	ClampHealth();
@@ -51,7 +51,7 @@ void UHealthComponent::SetHealth(float Health, AActor* InvokeActor)
 	OnHealthChanged.Broadcast(CurrentHealth, InvokeActor);
 }
 
-void UHealthComponent::SetMaxHealth(float Health, AActor* InvokeActor)
+void UHealthComponent::SetMaxHealth(float Health, AActor* InvokeActor /*= nullptr*/)
 {
 	MaxHealth = Health;
 	ClampHealth();
@@ -152,7 +152,7 @@ void UHealthComponent::Revive(float ReviveStartHealth, AActor* InvokeActor /*= n
 {
 	if (bIsDead)
 	{
-		SetHealth(ReviveStartHealth);
+		SetHealth(ReviveStartHealth, InvokeActor);
 		bIsDead = false;
 
 		ClampHealth();
