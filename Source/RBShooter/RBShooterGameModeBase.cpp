@@ -310,7 +310,7 @@ bool ARBShooterGameModeBase::AttemptToStartNextWave()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Waiting for all enemies to die before starting wave"));
+			UE_LOG(LogTemp, Warning, TEXT("Waiting for all enemies to die before starting wave (%i >= %i)"), DeadEnemyCountThisWave.KillCountTotal, NumTotalEnemiesSpawnedThisWave);
 			return false;
 		}
 	}
