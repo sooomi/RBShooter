@@ -37,13 +37,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Timer Management")
 	bool IncreaseTimer(float Amount, EColorTypes ColorType);
 
-	/* Adds 1 Bomb Point. @return True if added, false if bomb point amount was at max */
+	/* Adds Bomb Point(s). @return True if added, false if bomb point amount was at max */
 	UFUNCTION(BlueprintCallable, Category = "Bomb Point")
-	bool AddBombPoint(EColorTypes ColorType);
+	bool AddBombPoint(EColorTypes ColorType, int32 Amount = 1);
 
-	/* Removes 1 Bomb Point. @return True if removed, false if bomb point amount was already 0 */
+	/* Removes Bomb Point(s). @return True if removed, false if bomb point amount was already 0 */
 	UFUNCTION(BlueprintCallable, Category = "Bomb Point")
-	bool RemoveBombPoint(EColorTypes ColorType);
+	bool RemoveBombPoint(EColorTypes ColorType, int32 Amount = 1);
 
 	/* Called when timer is started for the first timer. */
 	UFUNCTION(BlueprintImplementableEvent, Category="Timer Callbacks")

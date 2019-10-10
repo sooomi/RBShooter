@@ -165,10 +165,11 @@ private:
 	float CurrentBurstDuration;
 	float CurrentBurstPauseDuration;
 	float CurrentWaveDuration;
-
 	float CurrentSpawnInterval;
+	float FirstBurstDelay;
 	
 	bool bFirstBurstDelayActive;
+	bool bHasAttemptedToStartGame;
 
 	int32 NumNextBurstEnemies;
 	int32 NumTotalEnemiesSpawnedThisWave;
