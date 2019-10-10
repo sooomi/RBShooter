@@ -157,6 +157,7 @@ private:
 	void BurstTimerUpdate();
 	void BurstSpawnTimerUpdate();
 	void FirstBurstDelayTimerUpdate();
+	void GetSpawnableNodes(TArray<AActor*>& OutNodes);
 
 	void ResetWaveVariables();
 

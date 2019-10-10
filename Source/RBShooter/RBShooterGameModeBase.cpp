@@ -221,10 +221,20 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 {
 	OutNodes.Reset();
 
-	// Early exit - number of nodes to be randomized is equal to number of existing nodes (no randomization needed)
-	if (NumNodes == EnemySpawnNodes.Num())
+	TArray<AActor*> SpawnableNodes;
+	GetSpawnableNodes(SpawnableNodes);
+
+	// SpawnableNodes can't be empty
+	if (SpawnableNodes.Num() == 0)
 	{
-		OutNodes = EnemySpawnNodes;
+		UE_LOG(LogTemp, Error, TEXT("SpawnableNodes is empty!"));
+		return;
+	}
+
+	// Early exit - number of nodes to be randomized is equal to number of spawnable nodes (no randomization needed)
+	if (NumNodes == SpawnableNodes.Num())
+	{
+		OutNodes = SpawnableNodes;
 		return;
 	}
 
@@ -232,12 +242,11 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 	bool bDoDuplicateCheck = true;
 	for (int32 i = 0; i < NumNodes; i++)
 	{
-		int32 RandomIndex = FMath::RandRange(0, EnemySpawnNodes.Num() - 1);
+		int32 RandomIndex = FMath::RandRange(0, SpawnableNodes.Num() - 1);
 
 		// Find a random index from all available nodes, that is not a duplicate of currently selected node array
-		bool bIndexOk = false;
 		int32 IterateCount = 0;
-		while (!bIndexOk && IterateCount < EnemySpawnNodes.Num())
+		while (IterateCount < SpawnableNodes.Num())
 		{
 			// Check if the node was already added
 			bool bFoundSameIndex = false;
@@ -245,7 +254,7 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 			{
 				for (int32 j = 0; j < OutNodes.Num(); j++)
 				{
-					if (EnemySpawnNodes[RandomIndex] == OutNodes[j])
+					if (SpawnableNodes[RandomIndex] == OutNodes[j])
 					{
 						bFoundSameIndex = true;
 					}
@@ -254,33 +263,19 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 
 			if (!bFoundSameIndex)
 			{
-				// Cast to its base class
-				AEnemySpawnNode* SpawnNode = Cast<AEnemySpawnNode>(EnemySpawnNodes[RandomIndex]);
-
-				if (SpawnNode)
-				{
-					// Check if the node qualifies
-					if (CanEnemyNodeBeSpawned(SpawnNode))
-					{
-						bIndexOk = true;
-					}
-				}
-				else
-				{
-					UE_LOG(LogTemp, Error, TEXT("SpawnNode is nullptr!"));
-				}
+				break;
 			}
 
 			// Re-generate random index
-			RandomIndex = FMath::RandRange(0, EnemySpawnNodes.Num() - 1);
+			RandomIndex = FMath::RandRange(0, SpawnableNodes.Num() - 1);
 
 			IterateCount++;
 		}
 
 		// "Select" the node by adding it to the array
-		OutNodes.Add(EnemySpawnNodes[RandomIndex]);
+		OutNodes.Add(SpawnableNodes[RandomIndex]);
 
-		if (OutNodes.Num() >= EnemySpawnNodes.Num())
+		if (OutNodes.Num() >= SpawnableNodes.Num())
 		{
 			bDoDuplicateCheck = false;
 		}
@@ -380,4 +375,16 @@ void ARBShooterGameModeBase::FirstBurstDelayTimerUpdate()
 {
 	bFirstBurstDelayActive = false;
 	OnNextBurstReady(CurrentWave, CurrentWaveBurst);
+}
+
+void ARBShooterGameModeBase::GetSpawnableNodes(TArray<AActor*>& OutNodes)
+{
+	for (int32 i = 0; i < EnemySpawnNodes.Num(); i++)
+	{
+		AEnemySpawnNode* EnemySpawnNode = Cast<AEnemySpawnNode>(EnemySpawnNodes[i]);
+		if (EnemySpawnNode && CanEnemyNodeBeSpawned(EnemySpawnNode))
+		{
+			OutNodes.Add(EnemySpawnNode);
+		}
+	}
 }
