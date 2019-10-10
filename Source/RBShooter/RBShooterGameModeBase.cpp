@@ -232,7 +232,7 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 	bool bDoDuplicateCheck = true;
 	for (int32 i = 0; i < NumNodes; i++)
 	{
-		int32 RandomIndex = FMath::RandRange(0, EnemySpawnNodes.Num() - 1);;
+		int32 RandomIndex = FMath::RandRange(0, EnemySpawnNodes.Num() - 1);
 
 		// Find a random index from all available nodes, that is not a duplicate of currently selected node array
 		bool bIndexOk = false;
