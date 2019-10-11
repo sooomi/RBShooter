@@ -56,7 +56,11 @@ void AProjectileBase::Fire(ACharacter* CharOwner, AWeapon* Weapon)
 	CharacterOwner = CharOwner;
 	WeaponOwner = Weapon;
 
+	// Apply weapon damage to projectile
 	DamageBonus = WeaponOwner->GetDamage(ProjectileType);
+
+	// Apply weapon projectile speed to projectile
+	CachedProjectileComponent->Velocity *= Weapon->GetProjectileSpeedMultiplier(ProjectileType);
 
 	OnProjectileFired();
 }
