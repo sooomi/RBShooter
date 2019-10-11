@@ -87,7 +87,7 @@ public:
 
 	/* Starts the game if current level has 1 or more spawn nodes */
 	UFUNCTION(BlueprintCallable, Category="Wave Management")
-	bool StartGameIfPossible(float TimeUntilFirstBurst = 0.0f);
+	bool StartGameIfPossible(float TimeUntilFirstBurst = 0.0f, UPARAM(DisplayName="Wait For Enemies To Die Before Starting Next Wave") bool bWaitForEnemies = true);
 
 	/* Stops and resets wave number to 1 & does a re-cache of all enemy spawn nodes in the level */
 	UFUNCTION(BlueprintCallable, Category="Wave Management")
@@ -129,7 +129,7 @@ public:
 	bool bGameActive;
 
 	/* If we should wait for remaining enemies to die before starting a new wave */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Wave Management")
+	UPROPERTY(BlueprintReadWrite, Category="Wave Management")
 	bool bWaitForEnemiesToDie;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Wave Management")
@@ -157,6 +157,7 @@ private:
 	void BurstTimerUpdate();
 	void BurstSpawnTimerUpdate();
 	void FirstBurstDelayTimerUpdate();
+	void GetSpawnableNodes(TArray<AActor*>& OutNodes);
 
 	void ResetWaveVariables();
 
@@ -165,10 +166,11 @@ private:
 	float CurrentBurstDuration;
 	float CurrentBurstPauseDuration;
 	float CurrentWaveDuration;
-
 	float CurrentSpawnInterval;
+	float FirstBurstDelay;
 	
 	bool bFirstBurstDelayActive;
+	bool bHasAttemptedToStartGame;
 
 	int32 NumNextBurstEnemies;
 	int32 NumTotalEnemiesSpawnedThisWave;

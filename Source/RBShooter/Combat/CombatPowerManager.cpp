@@ -91,7 +91,7 @@ bool ACombatPowerManager::IncreaseTimer(float Amount, EColorTypes ColorType)
 	if (NewTime >= MaxTime)
 	{
 		NewTime -= MaxTime;
-		AddBombPoint(ColorType);
+		AddBombPoint(ColorType, 1);
 	}
 
 	// Set the timer
@@ -112,12 +112,12 @@ bool ACombatPowerManager::IncreaseTimer(float Amount, EColorTypes ColorType)
 	return bTimerActive;
 }
 
-bool ACombatPowerManager::AddBombPoint(EColorTypes ColorType)
+bool ACombatPowerManager::AddBombPoint(EColorTypes ColorType, int32 Amount /* = 1*/)
 {
 	int32& PointValue = GetPointValueFromColor(ColorType);
 	if (PointValue < MaxNumBombPoints)
 	{
-		PointValue = FMath::Clamp(++PointValue, 0, MaxNumBombPoints);
+		PointValue = FMath::Clamp(PointValue += Amount, 0, MaxNumBombPoints);
 		OnBombPointAdded(ColorType, PointValue);
 
 		return true;
@@ -126,12 +126,12 @@ bool ACombatPowerManager::AddBombPoint(EColorTypes ColorType)
 	return false;
 }
 
-bool ACombatPowerManager::RemoveBombPoint(EColorTypes ColorType)
+bool ACombatPowerManager::RemoveBombPoint(EColorTypes ColorType, int32 Amount /* = 1*/)
 {
 	int32& PointValue = GetPointValueFromColor(ColorType);
 	if (PointValue > 0)
 	{
-		PointValue = FMath::Clamp(--PointValue, 0, MaxNumBombPoints);
+		PointValue = FMath::Clamp(PointValue -= Amount, 0, MaxNumBombPoints);
 		OnBombPointRemoved(ColorType, PointValue);
 
 		return true;
