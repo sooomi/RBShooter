@@ -26,11 +26,10 @@ public:
 	
 	virtual void Tick(float DeltaTime) override;
 
+	float GetProjectileSpeedMultiplier(EColorTypes ColorType);
+
 	UFUNCTION(BlueprintPure, Category="Weapon Damage")
 	float GetDamage(EColorTypes ColorType);
-
-	UFUNCTION(BlueprintPure, Category = "Weapon Fire")
-	float GetProjectileSpeedMultiplier(EColorTypes ColorType);
 
 	UFUNCTION(BlueprintCallable, Category="Weapon Fire")
 	bool LoadProjectile(EColorTypes ProjectileType);
