@@ -45,3 +45,19 @@ void UGameUtility::ResetKillcount(FKillCount& KillCountObject)
 	KillCountObject.KillCountBlue = 0;
 	KillCountObject.KillCountTotal = 0;
 }
+
+void UGameUtility::SetValue(UPARAM(ref)FWeaponColorAttribute& WeaponColorAttributeObject, float Value, EColorTypes ColorType)
+{
+	switch (ColorType)
+	{
+	case EColorTypes::CT_Red:
+		WeaponColorAttributeObject.ValueRed = Value;
+		break;
+	case EColorTypes::CT_Blue:
+		WeaponColorAttributeObject.ValueBlue = Value;
+		break;
+	case EColorTypes::CT_None:
+		WeaponColorAttributeObject.ValueGlobal = Value;
+		break;
+	}
+}

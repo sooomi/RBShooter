@@ -26,6 +26,8 @@ public:
 	
 	virtual void Tick(float DeltaTime) override;
 
+	float GetProjectileSpeedMultiplier(EColorTypes ColorType);
+
 	UFUNCTION(BlueprintPure, Category="Weapon Damage")
 	float GetDamage(EColorTypes ColorType);
 
@@ -54,6 +56,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
 	float DamageGeneric;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
+	FWeaponColorAttribute ProjectileMultiplier;
 
 	UPROPERTY(BlueprintReadWrite, Category="Weapon Fire")
 	bool bWantsToFireMagnetProjectile;
