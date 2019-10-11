@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintPure, Category="Weapon Damage")
 	float GetDamage(EColorTypes ColorType);
 
+	UFUNCTION(BlueprintPure, Category = "Weapon Fire")
+	float GetProjectileSpeedMultiplier(EColorTypes ColorType);
+
 	UFUNCTION(BlueprintCallable, Category="Weapon Fire")
 	bool LoadProjectile(EColorTypes ProjectileType);
 
@@ -54,6 +57,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
 	float DamageGeneric;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
+	FWeaponColorAttribute ProjectileMultiplier;
 
 	UPROPERTY(BlueprintReadWrite, Category="Weapon Fire")
 	bool bWantsToFireMagnetProjectile;
