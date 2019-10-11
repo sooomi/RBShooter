@@ -36,6 +36,28 @@ struct FKillCount
 	int32 KillCountTotal;
 };
 
+USTRUCT(BlueprintType)
+struct FWeaponColorAttribute
+{
+	GENERATED_BODY()
+
+	FWeaponColorAttribute()
+	{
+		ValueRed = 1.0f;
+		ValueBlue = 1.0f;
+		ValueGlobal = 1.0f;
+	}
+
+	UPROPERTY(BlueprintReadOnly, Category = "Projectile Multiplier")
+	float ValueRed;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Projectile Multiplier")
+	float ValueBlue;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Projectile Multiplier")
+	float ValueGlobal;
+};
+
 /**
  * 
  */
@@ -46,6 +68,8 @@ class RBSHOOTER_API UGameUtility : public UBlueprintFunctionLibrary
 	
 public:
 
+	/* FKillCount Functions */
+
 	UFUNCTION(BlueprintCallable, Category = "KillCount")
 	static void IncrementKillCount(UPARAM(ref) FKillCount& KillCountObject, int32 Amount = 1, EColorTypes Type = EColorTypes::CT_None);
 
@@ -54,4 +78,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "KillCount")
 	static void ResetKillcount(UPARAM(ref) FKillCount& KillCountObject);
+
+	/* FWeaponColorAttribute Functions */
+
+	UFUNCTION(BlueprintCallable, Category = "KillCount")
+	static void SetValue(UPARAM(ref) FWeaponColorAttribute& WeaponColorAttributeObject, float Value = 1.0f, EColorTypes ColorType = EColorTypes::CT_None);
 };

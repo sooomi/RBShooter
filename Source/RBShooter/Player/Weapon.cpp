@@ -64,6 +64,20 @@ float AWeapon::GetDamage(EColorTypes ColorType)
 	return DamageGeneric;
 }
 
+float AWeapon::GetProjectileSpeedMultiplier(EColorTypes ColorType)
+{
+	if (ColorType == EColorTypes::CT_Red)
+	{
+		return ProjectileMultiplier.ValueRed * ProjectileMultiplier.ValueGlobal;
+	}
+	else if (ColorType == EColorTypes::CT_Blue)
+	{
+		return ProjectileMultiplier.ValueBlue * ProjectileMultiplier.ValueGlobal;
+	}
+
+	return ProjectileMultiplier.ValueGlobal;
+}
+
 bool AWeapon::LoadProjectile(EColorTypes ProjectileType)
 {
 	if (!bIsChargingWeapon)
