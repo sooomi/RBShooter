@@ -258,6 +258,7 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 					if (SpawnableNodes[RandomIndex] == OutNodes[j])
 					{
 						bFoundSameIndex = true;
+						break;
 					}
 				}
 			}
