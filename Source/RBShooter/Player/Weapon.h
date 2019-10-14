@@ -7,6 +7,14 @@
 #include "Combat/ProjectileBase.h"
 #include "Weapon.generated.h"
 
+UENUM(BlueprintType)
+enum class EPowerTiesTypes : uint8
+{
+	PTT_Tier1 UMETA(DisplayName = "Magnet Projectile"),
+	PTT_Tier2 UMETA(DisplayName = "Magnet Grenade"),
+	PTT_Tier3 UMETA(DisplayName = "Board Clear")
+};
+
 class APlayerCharacter;
 
 UCLASS()
@@ -65,6 +73,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Fire Immediately Upon Reaching Max Charge"), Category="Weapon Fire")
 	bool bFireImmediatelyMaxCharge;
+
+	UPROPERTY(BlueprintReadWrite, Category="Power Tier")
+	EPowerTiesTypes PowerTierRed;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Power Tier")
+	EPowerTiesTypes PowerTierBlue;
 
 private: // Weapon charging
 
