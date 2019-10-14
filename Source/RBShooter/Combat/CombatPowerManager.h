@@ -100,4 +100,7 @@ private:
 
 	int32& GetPointValueFromColor(EColorTypes ColorType);
 
+	bool AddBombPointInternal(EColorTypes ColorType, int32 Amount = 1);
+	bool RemoveBombPointInternal(EColorTypes ColorType, int32 Amount = 1);
+
 };
