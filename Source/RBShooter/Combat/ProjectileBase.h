@@ -67,7 +67,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
 	float BaseDamage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+	UPROPERTY(BlueprintReadOnly, Category = "Damage")
 	float DamageBonus;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Projectile")
