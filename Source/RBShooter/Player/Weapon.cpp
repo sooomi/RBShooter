@@ -24,7 +24,7 @@ AWeapon::AWeapon()
 	DamageBlue = 0.0f;
 	DamageGeneric = 0.0f;
 
-	bWantsToFireMagnetProjectile = false;
+	bWantsToFirePowerAbility = false;
 	bFireImmediatelyMaxCharge = true;
 	bHasReachedMaxCharge = false;
 
@@ -78,6 +78,20 @@ float AWeapon::GetProjectileSpeedMultiplier(EColorTypes ColorType)
 	return ProjectileMultiplier.ValueGlobal;
 }
 
+EPowerTiesTypes AWeapon::GetPowerTierFromColor(EColorTypes ColorType)
+{
+	if (ColorType == EColorTypes::CT_Red)
+	{
+		return PowerTierRed;
+	}
+	else if (ColorType == EColorTypes::CT_Blue)
+	{
+		return PowerTierBlue;
+	}
+
+	return EPowerTiesTypes::PTT_TierNone;
+}
+
 bool AWeapon::LoadProjectile(EColorTypes ProjectileType)
 {
 	if (!bIsChargingWeapon)
@@ -106,6 +120,23 @@ bool AWeapon::ReleaseProjectile(EColorTypes ProjectileType)
 	}
 
 	return false;
+}
+
+void AWeapon::SetPowerTier(EColorTypes ColorType, EPowerTiesTypes PowerTier)
+{
+	if (ColorType == EColorTypes::CT_Red)
+	{
+		PowerTierRed = PowerTier;
+	}
+	else if (ColorType == EColorTypes::CT_Blue)
+	{
+		PowerTierBlue = PowerTier;
+	}
+	else
+	{
+		PowerTierRed = PowerTier;
+		PowerTierBlue = PowerTier;
+	}
 }
 
 bool AWeapon::TryToFireProjectile(EColorTypes ProjectileType)

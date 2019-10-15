@@ -208,6 +208,12 @@ bool ACombatPowerManager::AddBombPointInternal(EColorTypes ColorType, int32 Amou
 
 bool ACombatPowerManager::RemoveBombPointInternal(EColorTypes ColorType, int32 Amount)
 {
+	// -1 removes all
+	if (Amount == -1)
+	{
+		Amount = MaxNumBombPoints;
+	}
+
 	int32& PointValue = GetPointValueFromColor(ColorType);
 	if (PointValue > 0)
 	{
