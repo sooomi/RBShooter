@@ -10,6 +10,7 @@
 UENUM(BlueprintType)
 enum class EPowerTiesTypes : uint8
 {
+	PTT_TierNone UMETA(DisplayName = "No Tier"),
 	PTT_Tier1 UMETA(DisplayName = "Magnet Projectile"),
 	PTT_Tier2 UMETA(DisplayName = "Magnet Grenade"),
 	PTT_Tier3 UMETA(DisplayName = "Board Clear")
@@ -36,6 +37,9 @@ public:
 
 	float GetProjectileSpeedMultiplier(EColorTypes ColorType);
 
+	UFUNCTION(BlueprintPure, Category = "Weapon Power")
+	EPowerTiesTypes GetPowerTierFromColor(EColorTypes ColorType);
+
 	UFUNCTION(BlueprintPure, Category="Weapon Damage")
 	float GetDamage(EColorTypes ColorType);
 
@@ -54,7 +58,13 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Weapon Events")
 	void OnProjectileReleased(EColorTypes ProjectileType, float ChargeFraction);
 
+	UFUNCTION(BlueprintCallable, Category = "Weapon Power")
+	void SetPowerTier(EColorTypes ColorType, EPowerTiesTypes PowerTier);
+
 public:
+
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon Damage")
+	float CurrentChargeAmount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
 	float DamageRed;
@@ -69,7 +79,7 @@ public:
 	FWeaponColorAttribute ProjectileMultiplier;
 
 	UPROPERTY(BlueprintReadWrite, Category="Weapon Fire")
-	bool bWantsToFireMagnetProjectile;
+	bool bWantsToFirePowerAbility;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Fire Immediately Upon Reaching Max Charge"), Category="Weapon Fire")
 	bool bFireImmediatelyMaxCharge;
@@ -80,6 +90,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Power Tier")
 	EPowerTiesTypes PowerTierBlue;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Power Tier")
+	EColorTypes ProjectileTypeToFire;
+
 private: // Weapon charging
 
 	UPROPERTY(EditAnywhere, Category="Weapon Charging")
@@ -89,8 +102,6 @@ private: // Weapon charging
 
 	bool bIsChargingWeapon;
 	bool bHasReachedMaxCharge;
-
-	float CurrentChargeAmount;
 
 	void SetChargeTimer();
 	void ChargeUpdate();
@@ -109,8 +120,6 @@ private: // Rate of fire
 private:
 
 	APlayerCharacter* CachedPlayerOwner;
-
-	EColorTypes ProjectileTypeToFire;
 
 	bool TryToFireProjectile(EColorTypes ProjectileType);
 
