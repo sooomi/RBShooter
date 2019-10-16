@@ -81,6 +81,6 @@ public:
 
 	/* FWeaponColorAttribute Functions */
 
-	UFUNCTION(BlueprintCallable, Category = "KillCount")
+	UFUNCTION(BlueprintCallable, Category = "Projectile Multiplier")
 	static void SetValue(UPARAM(ref) FWeaponColorAttribute& WeaponColorAttributeObject, float Value = 1.0f, EColorTypes ColorType = EColorTypes::CT_None);
 };

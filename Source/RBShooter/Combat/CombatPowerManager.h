@@ -41,7 +41,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Bomb Point")
 	bool AddBombPoint(EColorTypes ColorType, int32 Amount = 1);
 
-	/* Removes Bomb Point(s). @return True if removed, false if bomb point amount was already 0 */
+	/* Removes Bomb Point(s). -1 Removes all. @return True if removed, false if bomb point amount was already 0 */
 	UFUNCTION(BlueprintCallable, Category = "Bomb Point")
 	bool RemoveBombPoint(EColorTypes ColorType, int32 Amount = 1);
 
