@@ -38,6 +38,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Enemy Damage")
 	float BaseDamage;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Enemy Damage")
+	int32 WaveCountSpawnedAt;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Enemy Damage")
+	int32 BurstCountSpawnedAt;
+
 private:
 
 	UCharacterMovementComponent* CachedMovementComponent;

@@ -41,7 +41,7 @@ void AWeapon::BeginPlay()
 	CachedPlayerOwner = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
 	// Setup rate of fire timer
-	GetWorldTimerManager().SetTimer(RoFTimerHandle, this, &AWeapon::RateOfFireUpdate, FireInterval, true, 0.0f);
+	SetFireInterval(FireInterval, true);
 }
 
 // Called every frame
@@ -137,6 +137,22 @@ void AWeapon::SetPowerTier(EColorTypes ColorType, EPowerTiesTypes PowerTier)
 		PowerTierRed = PowerTier;
 		PowerTierBlue = PowerTier;
 	}
+}
+
+void AWeapon::SetFireInterval(float Interval, bool bResetInterval)
+{
+	float OldInterval = FireInterval;
+	FireInterval = Interval;
+
+	float InFirstDelay = -1.0f;
+
+	if (!bResetInterval)
+	{
+		float CurrentElapsed = FMath::Max(GetWorldTimerManager().GetTimerElapsed(RoFTimerHandle), 0.0f);
+		InFirstDelay = OldInterval - CurrentElapsed;
+	}
+
+	GetWorldTimerManager().SetTimer(RoFTimerHandle, this, &AWeapon::RateOfFireUpdate, FireInterval, true, InFirstDelay);
 }
 
 bool AWeapon::TryToFireProjectile(EColorTypes ProjectileType)
