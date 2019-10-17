@@ -61,7 +61,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon Power")
 	void SetPowerTier(EColorTypes ColorType, EPowerTiesTypes PowerTier);
 
+	UFUNCTION(BlueprintCallable, Category = "Weapon Fire")
+	void SetFireInterval(float Interval, bool bResetInterval = true);
+
 public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Fire")
+	float FireInterval;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon Damage")
 	float CurrentChargeAmount;
@@ -107,9 +113,6 @@ private: // Weapon charging
 	void ChargeUpdate();
 
 private: // Rate of fire
-
-	UPROPERTY(EditAnywhere, Category="Weapon Fire")
-	float FireInterval;
 
 	FTimerHandle RoFTimerHandle;
 
