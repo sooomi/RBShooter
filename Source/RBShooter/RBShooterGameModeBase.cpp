@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "Engine/World.h"
+#include "Enemy/Enemy.h"
 
 ARBShooterGameModeBase::ARBShooterGameModeBase()
 {
@@ -329,6 +330,9 @@ void ARBShooterGameModeBase::ActivateNextEnemyNode()
 		if (SpawnNode)
 		{
 			AEnemy* SpawnedEnemy = SpawnNode->ActivateSpawn();
+			SpawnedEnemy->WaveCountSpawnedAt = CurrentWave;
+			SpawnedEnemy->BurstCountSpawnedAt = CurrentWaveBurst;
+
 			NumTotalEnemiesSpawnedThisWave++;
 			OnEnemySpawned(SpawnedEnemy, SpawnNode, CurrentEnemyIndex, CurrentWave, CurrentWaveBurst);
 			
