@@ -34,10 +34,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"), Category="Magnet")
 	EColorTypes EnemyType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Magnet")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"), Category = "Magnet")
 	float OuterAttractionPull;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Magnet")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"), Category = "Magnet")
 	float InnerAttractionPull;
 
 private:
