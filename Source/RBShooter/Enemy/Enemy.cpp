@@ -13,6 +13,8 @@ AEnemy::AEnemy()
 
 	BaseDamage = 1.0f;
 
+	WaveCountSpawnedAt = 0;
+	BurstCountSpawnedAt = 0;
 }
 
 // Called when the game starts or when spawned
