@@ -59,11 +59,9 @@ void AProjectileBase::Fire(ACharacter* CharOwner, AWeapon* Weapon)
 	// Apply weapon damage to projectile
 	DamageBonus = WeaponOwner->GetDamage(ProjectileType);
 
-	//// Apply weapon projectile speed to projectile
-	//float SpeedMultiplier = Weapon->GetProjectileSpeedMultiplier(ProjectileType);
-	//CachedProjectileComponent->SetVelocityInLocalSpace(FVector(SpeedMultiplier));
-
-	//UE_LOG(LogTemp, Warning, TEXT("%f"), Weapon->GetProjectileSpeedMultiplier(ProjectileType));
+	// Apply weapon projectile speed to projectile
+	float SpeedMultiplier = Weapon->GetProjectileSpeedMultiplier(ProjectileType);
+	CachedProjectileComponent->SetVelocityInLocalSpace(FVector(SpeedMultiplier * CachedProjectileComponent->InitialSpeed, 0.0f, 0.0f));
 
 	OnProjectileFired();
 }
