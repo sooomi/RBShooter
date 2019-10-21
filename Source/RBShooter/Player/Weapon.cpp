@@ -203,7 +203,20 @@ void AWeapon::ChargeUpdate()
 
 void AWeapon::UpdateChargeAmount()
 {
-	CurrentChargeAmount = FMath::Max(0.0f, GetWorldTimerManager().GetTimerElapsed(ChargeTimerHandle));
+	bool bTimerActive = GetWorldTimerManager().TimerExists(ChargeTimerHandle);
+	if (bIsChargingWeapon)
+	{
+		if (bTimerActive)
+		{
+			CurrentChargeAmount = FMath::Max(0.0f, GetWorldTimerManager().GetTimerElapsed(ChargeTimerHandle));
+		}
+	}
+	else
+	{
+		CurrentChargeAmount = 0.0f;
+	}
+
+	CurrentChargeAmount = FMath::Clamp(CurrentChargeAmount, 0.0f, MaxChargeDuration);
 }
 
 void AWeapon::RateOfFireUpdate()
