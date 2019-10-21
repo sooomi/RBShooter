@@ -78,6 +78,13 @@ float AWeapon::GetProjectileSpeedMultiplier(EColorTypes ColorType)
 	return ProjectileMultiplier.ValueGlobal;
 }
 
+float AWeapon::GetChargeFraction()
+{
+	UpdateChargeAmount();
+
+	return CurrentChargeAmount / MaxChargeDuration;
+}
+
 EPowerTiesTypes AWeapon::GetPowerTierFromColor(EColorTypes ColorType)
 {
 	if (ColorType == EColorTypes::CT_Red)
@@ -168,8 +175,7 @@ bool AWeapon::TryToFireProjectile(EColorTypes ProjectileType)
 		OnFireProjectileConfirmed(ProjectileType, CurrentChargeAmount);
 		bCanFire = false;
 
-		float ChargePercent = CurrentChargeAmount / MaxChargeDuration;
-		OnProjectileReleased(ProjectileType, ChargePercent);
+		OnProjectileReleased(ProjectileType, GetChargeFraction());
 
 		bHasReachedMaxCharge = false;
 
@@ -187,12 +193,30 @@ void AWeapon::SetChargeTimer()
 void AWeapon::ChargeUpdate()
 {
 	bHasReachedMaxCharge = true;
-	CurrentChargeAmount = FMath::Max(0.0f, GetWorldTimerManager().GetTimerElapsed(ChargeTimerHandle));
+	UpdateChargeAmount();
 
 	if (bIsChargingWeapon && bFireImmediatelyMaxCharge)
 	{
 		TryToFireProjectile(ProjectileTypeToFire);
 	}
+}
+
+void AWeapon::UpdateChargeAmount()
+{
+	bool bTimerActive = GetWorldTimerManager().TimerExists(ChargeTimerHandle);
+	if (bIsChargingWeapon)
+	{
+		if (bTimerActive)
+		{
+			CurrentChargeAmount = FMath::Max(0.0f, GetWorldTimerManager().GetTimerElapsed(ChargeTimerHandle));
+		}
+	}
+	else
+	{
+		CurrentChargeAmount = 0.0f;
+	}
+
+	CurrentChargeAmount = FMath::Clamp(CurrentChargeAmount, 0.0f, MaxChargeDuration);
 }
 
 void AWeapon::RateOfFireUpdate()

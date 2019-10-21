@@ -30,7 +30,7 @@ public:
 	AEnemy* ActivateSpawn();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
-	void OnSpawnSelected(float TimeUntilSpawn);
+	void OnSpawnSelected(float TimeUntilFirstSpawn);
 
 public:
 

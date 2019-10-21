@@ -37,6 +37,9 @@ public:
 
 	float GetProjectileSpeedMultiplier(EColorTypes ColorType);
 
+	UFUNCTION(BlueprintPure, Category="Weapon Charging")
+	float GetChargeFraction();
+
 	UFUNCTION(BlueprintPure, Category = "Weapon Power")
 	EPowerTiesTypes GetPowerTierFromColor(EColorTypes ColorType);
 
@@ -90,6 +93,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Fire Immediately Upon Reaching Max Charge"), Category="Weapon Fire")
 	bool bFireImmediatelyMaxCharge;
 
+	UPROPERTY(BlueprintReadOnly, Category="Weapon Charging")
+	bool bIsChargingWeapon;
+
 	UPROPERTY(BlueprintReadWrite, Category="Power Tier")
 	EPowerTiesTypes PowerTierRed;
 
@@ -106,11 +112,11 @@ private: // Weapon charging
 
 	FTimerHandle ChargeTimerHandle;
 
-	bool bIsChargingWeapon;
 	bool bHasReachedMaxCharge;
 
 	void SetChargeTimer();
 	void ChargeUpdate();
+	void UpdateChargeAmount();
 
 private: // Rate of fire
 
