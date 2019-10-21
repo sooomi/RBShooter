@@ -201,6 +201,17 @@ bool ARBShooterGameModeBase::StartBurst(int32 NumEnemiesToSpawn)
 			NumCurrentEnemiesPendingSpawn = NumEnemiesToSpawn;
 			float BurstSpawnInterval = CurrentBurstDuration / (float)NumEnemiesToSpawn;
 
+			// Notify the spawn nodes that they're about to spawn
+			for (int32 i = 0; i < SelectedEnemySpawnNodes.Num(); i++)
+			{
+				float TimeUntilSpawn = (1.0f + (float)i) * BurstSpawnInterval;
+				AEnemySpawnNode* SpawnNode = Cast<AEnemySpawnNode>(SelectedEnemySpawnNodes[i]);
+				if (SpawnNode)
+				{
+					SpawnNode->OnSpawnSelected(TimeUntilSpawn);
+				}
+			}
+
 			GetWorldTimerManager().SetTimer(BurstSpawnTimerHandle, this, &ARBShooterGameModeBase::BurstSpawnTimerUpdate, BurstSpawnInterval, true, 0.0f);
 
 			return true;

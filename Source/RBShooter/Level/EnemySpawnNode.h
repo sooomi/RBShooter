@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="Spawning")
 	AEnemy* ActivateSpawn();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
+	void OnSpawnSelected(float TimeUntilSpawn);
+
 public:
 
 	/* Pool of possible enemies that can spawn from this node. Will randomly choose between them. */
