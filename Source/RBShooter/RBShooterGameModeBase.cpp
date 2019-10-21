@@ -204,11 +204,11 @@ bool ARBShooterGameModeBase::StartBurst(int32 NumEnemiesToSpawn)
 			// Notify the spawn nodes that they're about to spawn
 			for (int32 i = 0; i < SelectedEnemySpawnNodes.Num(); i++)
 			{
-				float TimeUntilSpawn = (1.0f + (float)i) * BurstSpawnInterval;
+				float TimeUntilFirstSpawn = (1.0f + (float)i) * BurstSpawnInterval;
 				AEnemySpawnNode* SpawnNode = Cast<AEnemySpawnNode>(SelectedEnemySpawnNodes[i]);
 				if (SpawnNode)
 				{
-					SpawnNode->OnSpawnSelected(TimeUntilSpawn);
+					SpawnNode->OnSpawnSelected(TimeUntilFirstSpawn);
 				}
 			}
 
