@@ -116,6 +116,7 @@ private: // Weapon charging
 
 	void SetChargeTimer();
 	void ChargeUpdate();
+	void UpdateChargeAmount();
 
 private: // Rate of fire
 

@@ -80,6 +80,8 @@ float AWeapon::GetProjectileSpeedMultiplier(EColorTypes ColorType)
 
 float AWeapon::GetChargeFraction()
 {
+	UpdateChargeAmount();
+
 	return CurrentChargeAmount / MaxChargeDuration;
 }
 
@@ -191,12 +193,17 @@ void AWeapon::SetChargeTimer()
 void AWeapon::ChargeUpdate()
 {
 	bHasReachedMaxCharge = true;
-	CurrentChargeAmount = FMath::Max(0.0f, GetWorldTimerManager().GetTimerElapsed(ChargeTimerHandle));
+	UpdateChargeAmount();
 
 	if (bIsChargingWeapon && bFireImmediatelyMaxCharge)
 	{
 		TryToFireProjectile(ProjectileTypeToFire);
 	}
+}
+
+void AWeapon::UpdateChargeAmount()
+{
+	CurrentChargeAmount = FMath::Max(0.0f, GetWorldTimerManager().GetTimerElapsed(ChargeTimerHandle));
 }
 
 void AWeapon::RateOfFireUpdate()
