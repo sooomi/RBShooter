@@ -78,6 +78,11 @@ float AWeapon::GetProjectileSpeedMultiplier(EColorTypes ColorType)
 	return ProjectileMultiplier.ValueGlobal;
 }
 
+float AWeapon::GetChargeFraction()
+{
+	return CurrentChargeAmount / MaxChargeDuration;
+}
+
 EPowerTiesTypes AWeapon::GetPowerTierFromColor(EColorTypes ColorType)
 {
 	if (ColorType == EColorTypes::CT_Red)
@@ -168,8 +173,7 @@ bool AWeapon::TryToFireProjectile(EColorTypes ProjectileType)
 		OnFireProjectileConfirmed(ProjectileType, CurrentChargeAmount);
 		bCanFire = false;
 
-		float ChargePercent = CurrentChargeAmount / MaxChargeDuration;
-		OnProjectileReleased(ProjectileType, ChargePercent);
+		OnProjectileReleased(ProjectileType, GetChargeFraction());
 
 		bHasReachedMaxCharge = false;
 
