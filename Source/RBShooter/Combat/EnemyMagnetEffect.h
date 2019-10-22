@@ -40,6 +40,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"), Category = "Magnet")
 	float InnerAttractionPull;
 
+	UPROPERTY(BlueprintReadWrite, Category="Magnet")
+	bool bIsAttractingEnemies;
+
 private:
 
 	UPROPERTY()
@@ -47,8 +50,6 @@ private:
 
 	UPROPERTY()
 	USphereComponent* CachedInnerSphereComponent;
-
-	bool bIsAttractingEnemies;
 
 private:
 
