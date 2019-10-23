@@ -33,7 +33,6 @@ void AProjectileBase::BeginPlay()
 	CachedProjectileComponent = Cast<UProjectileMovementComponent>(GetComponentByClass(UProjectileMovementComponent::StaticClass()));
 
 	CachedSphereComponent = Cast<USphereComponent>(GetComponentByClass(USphereComponent::StaticClass()));
-	CachedSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectileBase::OnProjectileHit);
 
 	// Lifetime timer
 	GetWorldTimerManager().SetTimer(LifeTimeTimerHandle, this, &AProjectileBase::LifeTimeUpdate, MaxLifeTime, false, -1.0f);
@@ -64,26 +63,6 @@ void AProjectileBase::Fire(ACharacter* CharOwner, AWeapon* Weapon)
 	CachedProjectileComponent->SetVelocityInLocalSpace(FVector(SpeedMultiplier * CachedProjectileComponent->InitialSpeed, 0.0f, 0.0f));
 
 	OnProjectileFired();
-}
-
-void AProjectileBase::OnProjectileHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	AEnemy* EnemyActor = Cast<AEnemy>(OtherActor);
-	if (EnemyActor)
-	{
-		if (EnemyActor->EnemyType == ProjectileType) // Colors match
-		{
-			OnProjectileHitEnemy(EnemyActor, true, GetDamage());
-		}
-		else // Colors don't match
-		{
-			OnProjectileHitEnemy(EnemyActor, false, GetDamage());
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Projectile Collision with no enemy"));
-	}
 }
 
 void AProjectileBase::LifeTimeUpdate()
