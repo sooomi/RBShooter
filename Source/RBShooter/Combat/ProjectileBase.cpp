@@ -58,9 +58,10 @@ void AProjectileBase::Fire(ACharacter* CharOwner, AWeapon* Weapon)
 	// Apply weapon damage to projectile
 	DamageBonus = WeaponOwner->GetDamage(ProjectileType);
 
-	// Apply weapon projectile speed to projectile
+	// Apply weapon projectile speed to projectile using time dilation
 	float SpeedMultiplier = Weapon->GetProjectileSpeedMultiplier(ProjectileType);
-	CachedProjectileComponent->SetVelocityInLocalSpace(FVector(SpeedMultiplier * CachedProjectileComponent->InitialSpeed, 0.0f, 0.0f));
+	CustomTimeDilation = SpeedMultiplier;
+	//CachedProjectileComponent->SetVelocityInLocalSpace(FVector(SpeedMultiplier * CachedProjectileComponent->InitialSpeed, 0.0f, 0.0f));
 
 	OnProjectileFired();
 }
