@@ -61,7 +61,7 @@ void AEnemyMagnetEffect::AttractFromSphere(USphereComponent* SphereComponent, fl
 			{
 				FVector Position(Enemy->GetActorLocation());
 
-				Enemy->SetActorLocation(FMath::Lerp(Position, GetActorLocation(), DeltaTime * AttractionPull));
+				Enemy->SetActorLocation(FMath::Lerp(Position, GetActorLocation(), DeltaTime * AttractionPull), true);
 			}
 		}
 	}
