@@ -13,7 +13,8 @@ enum class EEnemyHitTypes : uint8
 	EHT_Unknown UMETA(DisplayName = "Unknown"),
 	EHT_Head UMETA(DisplayName = "Head"),
 	EHT_Chest UMETA(DisplayName = "Chest"),
-	EHT_Legs UMETA(DisplayName = "Legs")
+	EHT_LegLeft UMETA(DisplayName = "LegLeft"),
+	EHT_LegRight UMETA(DisplayName = "LegRight")
 };
 
 class UCharacterMovementComponent;
