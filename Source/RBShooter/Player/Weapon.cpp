@@ -20,9 +20,9 @@ AWeapon::AWeapon()
 	MaxChargeDuration = 3.0f;
 	bIsChargingWeapon = false;
 
-	DamageRed = 0.0f;
-	DamageBlue = 0.0f;
-	DamageGeneric = 0.0f;
+	DamageBonus.ValueRed = 0.0f;
+	DamageBonus.ValueBlue = 0.0f;
+	DamageBonus.ValueGlobal = 0.0f;
 
 	bWantsToFirePowerAbility = false;
 	bFireImmediatelyMaxCharge = true;
@@ -54,14 +54,14 @@ float AWeapon::GetDamage(EColorTypes ColorType)
 {
 	if (ColorType == EColorTypes::CT_Red)
 	{
-		return DamageGeneric + DamageRed;
+		return DamageBonus.ValueRed + DamageBonus.ValueGlobal;
 	}
 	else if (ColorType == EColorTypes::CT_Blue)
 	{
-		return DamageGeneric + DamageBlue;
+		return DamageBonus.ValueBlue + DamageBonus.ValueGlobal;
 	}
 
-	return DamageGeneric;
+	return DamageBonus.ValueGlobal;
 }
 
 float AWeapon::GetProjectileSpeedMultiplier(EColorTypes ColorType)
