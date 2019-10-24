@@ -76,13 +76,7 @@ public:
 	float CurrentChargeAmount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
-	float DamageRed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
-	float DamageBlue;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
-	float DamageGeneric;
+	FWeaponColorAttribute DamageBonus;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Damage")
 	FWeaponColorAttribute ProjectileMultiplier;
