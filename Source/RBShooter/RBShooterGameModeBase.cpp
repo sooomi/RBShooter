@@ -298,7 +298,7 @@ void ARBShooterGameModeBase::GetRandomEnemySpawnNodes(int32 NumNodes, TArray<AAc
 
 bool ARBShooterGameModeBase::CanEnemyNodeBeSpawned(AEnemySpawnNode* SpawnNode)
 {
-	if (CurrentWave >= SpawnNode->MinimumWaveCount)
+	if (CurrentWave >= SpawnNode->MinimumWaveCount && !SpawnNode->bIsSpawnInProgress)
 	{
 		return true;
 	}
