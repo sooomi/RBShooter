@@ -42,4 +42,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Spawning")
 	int32 MinimumWaveCount;
 
+	UPROPERTY(BlueprintReadWrite, Category="Spawning")
+	bool bIsSpawnInProgress;
+
 };
