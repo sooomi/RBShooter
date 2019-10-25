@@ -10,6 +10,7 @@ AEnemySpawnNode::AEnemySpawnNode()
 	PrimaryActorTick.bCanEverTick = false;
 
 	MinimumWaveCount = 0;
+	bIsSpawnInProgress = false;
 
 }
 
