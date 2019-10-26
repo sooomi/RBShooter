@@ -10,7 +10,7 @@
 class UProjectileMovementComponent;
 class USphereComponent;
 class AEnemy;
-class ACharacter;
+class APlayerCharacter;
 class AWeapon;
 
 UCLASS()
@@ -39,7 +39,7 @@ public:
 	// Called from weapon blueprint when this actor
 	// is spawned in the world
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void Fire(ACharacter* CharacterOwner, AWeapon* Weapon);
+	void Fire(APlayerCharacter* Player, AWeapon* Weapon);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Projectile Event")
 	void OnProjectileFired();
@@ -47,7 +47,7 @@ public:
 public:
 
 	UPROPERTY(BlueprintReadOnly, Category="Projectile")
-	ACharacter* CharacterOwner;
+	APlayerCharacter* PlayerOwner;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Projectile")
 	AWeapon* WeaponOwner;

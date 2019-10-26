@@ -29,11 +29,6 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-public: // Weapon
-
-	UPROPERTY(BlueprintReadWrite, Category = "Weapon")
-	AWeapon* WeaponActor;
-
 private: // Camera
 
 	UPROPERTY(EditAnywhere, Category = "Camera")

@@ -50,9 +50,9 @@ float AProjectileBase::GetDamage()
 	return BaseDamage + DamageBonus;
 }
 
-void AProjectileBase::Fire(ACharacter* CharOwner, AWeapon* Weapon)
+void AProjectileBase::Fire(APlayerCharacter* Player, AWeapon* Weapon)
 {
-	CharacterOwner = CharOwner;
+	PlayerOwner = Player;
 	WeaponOwner = Weapon;
 
 	// Apply weapon damage to projectile
