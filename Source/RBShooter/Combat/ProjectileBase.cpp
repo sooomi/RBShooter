@@ -22,7 +22,7 @@ AProjectileBase::AProjectileBase()
 	MaxLifeTime = 20.0f;
 	BaseDamage = 1.0f;
 	DamageBonus = 0.0f;
-	ChargeAmount = 0.0f;
+	ChargeFraction = 0.0f;
 }
 
 // Called when the game starts or when spawned

@@ -64,8 +64,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Damage")
 	float DamageBonus;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Projectile")
-	float ChargeAmount;
+	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = "true"), Category = "Projectile")
+	float ChargeFraction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USphereComponent* EditorSphereComponent;
