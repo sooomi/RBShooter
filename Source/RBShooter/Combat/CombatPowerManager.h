@@ -24,6 +24,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintPure, Category = "Timer Management")
+	int32 GetNumBombPoints(EColorTypes ColorType);
+
 	UFUNCTION(BlueprintPure, Category="Timer Management")
 	float GetTimeLeft(EColorTypes ColorType);
 
