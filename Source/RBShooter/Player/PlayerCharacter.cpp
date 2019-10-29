@@ -11,7 +11,9 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	CameraLookSensitivity = 1.0f;
+	CameraSensitivityDefault = 1.0f;
+	CameraSensitivityMultiplier = 1.0f;
+	CameraSensitivityFinal = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -48,6 +50,20 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis(TEXT("LookUpDownRate"), this, &APlayerCharacter::InputCallback_LookUpDown);
 }
 
+void APlayerCharacter::SetDefaultCameraSensitivity(float SensitivityDefault)
+{
+	CameraSensitivityDefault = SensitivityDefault;
+
+	CameraSensitivityFinal = CameraSensitivityDefault * CameraSensitivityMultiplier;
+}
+
+void APlayerCharacter::SetCameraSensitivityMultiplier(float Multiplier)
+{
+	CameraSensitivityMultiplier = Multiplier;
+
+	CameraSensitivityFinal = CameraSensitivityDefault * CameraSensitivityMultiplier;
+}
+
 void APlayerCharacter::MoveFromInput()
 {
 	const FTransform& Transform = GetActorTransform();
@@ -68,12 +84,12 @@ void APlayerCharacter::InputCallback_MoveForwardBack(float Axis)
 
 void APlayerCharacter::InputCallback_LookLeftRight(float Axis)
 {
-	AddControllerYawInput(Axis * CameraLookSensitivity);
+	AddControllerYawInput(Axis * CameraSensitivityFinal);
 }
 
 void APlayerCharacter::InputCallback_LookUpDown(float Axis)
 {
-	AddControllerPitchInput(Axis * CameraLookSensitivity);
+	AddControllerPitchInput(Axis * CameraSensitivityFinal);
 }
 
 void APlayerCharacter::InputCallback_FireRedProjectile()
