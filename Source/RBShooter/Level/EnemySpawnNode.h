@@ -32,6 +32,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
 	void OnSpawnSelected(float TimeUntilFirstSpawn);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
+	void OnPostSpawnEvent(AEnemy* SpawnedEnemy, int32 CurrentEnemyIndex, int32 CurrentWave, int32 CurrentWaveBurst);
+
 public:
 
 	/* Pool of possible enemies that can spawn from this node. Will randomly choose between them. */

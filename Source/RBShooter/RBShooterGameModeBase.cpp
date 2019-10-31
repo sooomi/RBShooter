@@ -346,6 +346,8 @@ void ARBShooterGameModeBase::ActivateNextEnemyNode()
 
 			NumTotalEnemiesSpawnedThisWave++;
 			OnEnemySpawned(SpawnedEnemy, SpawnNode, CurrentEnemyIndex, CurrentWave, CurrentWaveBurst);
+
+			SpawnNode->OnPostSpawnEvent(SpawnedEnemy, CurrentEnemyIndex, CurrentWave, CurrentWaveBurst);
 			
 		}
 		else
