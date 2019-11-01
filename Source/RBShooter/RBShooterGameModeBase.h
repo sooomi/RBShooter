@@ -86,8 +86,12 @@ public:
 	void OnEnemySpawned(AEnemy* Enemy, AEnemySpawnNode* SpawnNode, int32 EnemyIndex, int32 WaveNumber, int32 BurstNumber);
 
 	/* Starts the game if current level has 1 or more spawn nodes */
-	UFUNCTION(BlueprintCallable, Category="Wave Management")
+	UFUNCTION(BlueprintCallable, Category="Game Management")
 	bool StartGameIfPossible(float TimeUntilFirstBurst = 0.0f, UPARAM(DisplayName="Wait For Enemies To Die Before Starting Next Wave") bool bWaitForEnemies = true);
+
+	/* Stops wave & burst spawners */
+	UFUNCTION(BlueprintCallable, Category = "Game Management")
+	bool StopGame(bool bDespawnEnemies = true);
 
 	/* Stops and resets wave number to 1 & does a re-cache of all enemy spawn nodes in the level */
 	UFUNCTION(BlueprintCallable, Category="Wave Management")
