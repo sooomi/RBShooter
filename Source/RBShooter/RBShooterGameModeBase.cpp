@@ -114,6 +114,32 @@ bool ARBShooterGameModeBase::StartGameIfPossible(float TimeUntilFirstBurst /*= 0
 	return false;
 }
 
+bool ARBShooterGameModeBase::StopGame(bool bDespawnEnemies)
+{
+	if (bGameActive)
+	{
+		StopWave();
+		StopBurst();
+
+		ResetWaveVariables();
+
+		if (bDespawnEnemies)
+		{
+			TArray<AActor*> SpawnedEnemies;
+			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemy::StaticClass(), SpawnedEnemies);
+
+			for (int32 i = 0; i < SpawnedEnemies.Num(); i++)
+			{
+				SpawnedEnemies[i]->Destroy();
+			}
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
 void ARBShooterGameModeBase::ResetToDefault()
 {
 	StopWave();
