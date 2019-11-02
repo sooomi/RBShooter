@@ -7,10 +7,13 @@
 #include "TimerManager.h"
 #include "Engine/World.h"
 #include "Enemy/Enemy.h"
+#include "Combat/ScoreManager.h"
 
 ARBShooterGameModeBase::ARBShooterGameModeBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	ScoreManager = nullptr;
 
 	bGameActive = false;
 	bFirstBurstDelayActive = false;
@@ -24,6 +27,13 @@ ARBShooterGameModeBase::ARBShooterGameModeBase()
 ARBShooterGameModeBase::~ARBShooterGameModeBase()
 {
 
+}
+
+void ARBShooterGameModeBase::PostInitProperties()
+{
+	Super::PostInitProperties();
+
+	ScoreManager = NewObject<UScoreManager>(this, UScoreManager::StaticClass(), "ScoreManager");
 }
 
 void ARBShooterGameModeBase::BeginPlay()

@@ -9,6 +9,7 @@
 
 class AEnemySpawnNode;
 class AEnemy;
+class UScoreManager;
 
 /**
  * 
@@ -22,6 +23,7 @@ public:
 	ARBShooterGameModeBase();
 	~ARBShooterGameModeBase();
 
+	virtual void PostInitProperties() override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -150,6 +152,11 @@ public:
 	/* Number of enemies who died this wave. Not necessarily killed by player. */
 	UPROPERTY(BlueprintReadWrite, Category = "Wave Stats")
 	FKillCount DeadEnemyCountThisWave;
+
+public:
+
+	UPROPERTY(BlueprintReadOnly, Category="Score")
+	UScoreManager* ScoreManager;
 
 private:
 

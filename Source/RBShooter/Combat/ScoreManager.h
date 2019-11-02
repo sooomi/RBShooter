@@ -7,14 +7,28 @@
 #include "GameUtility.h"
 #include "ScoreManager.generated.h"
 
+class AEnemy;
+class APlayerCharacter;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FScoreChangedDelegate, float, Score, AEnemy*, Enemy);
+
 UCLASS()
-class RBSHOOTER_API AScoreManager : public AActor
+class RBSHOOTER_API UScoreManager : public UObject
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AScoreManager();
+	UScoreManager();
+
+	UFUNCTION(BlueprintCallable, Category = "Score BlueprintImplement")
+	void UpdateScoreTimer(float DeltaTime);
+
+	UFUNCTION(BlueprintCallable, Category="Score BlueprintImplement")
+	void HandleEnemyDeath(AEnemy* Enemy, AActor* Killer);
+
+	UFUNCTION(BlueprintCallable, Category="Score BlueprintImplement")
+	void HandleDamageDealt(float Damage, AActor* DamageTarget, EEnemyHitTypes HitLocation);
 
 	/* Returns score streak amount fraction for color */
 	UFUNCTION(BlueprintPure, Category="Score Streak")
@@ -28,30 +42,26 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Score Streak")
 	bool IsScoreStreakActive(EColorTypes ColorType);
 
-	/* Update/Start score streak */
-	UFUNCTION(BlueprintCallable, Category="Score Streak")
-	void UpdateScoreStreak(EColorTypes ColorType, int32 Amount = 1, float NewTime = 5.0f);
-
-	/* Cancel active score streak */
-	UFUNCTION(BlueprintCallable, Category = "Score Streak")
-	void CancelScoreStreak(EColorTypes ColorType);
-
 	/* Event for when score streak is updated */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Score Streak")
 	void OnScoreStreakUpdated(EColorTypes ColorType, int32 Amount, float NewTime, bool bWasStarted);
 
 public:
 
+	UFUNCTION(BlueprintPure, Category = "Score Streak")
+	float GetScoreStreakMultiplier(EColorTypes ColorType);
+
+	UPROPERTY(BlueprintAssignable, Category="Score Event")
+	FScoreChangedDelegate OnScoreChanged;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Score Streak")
 	int32 MaxScoreStreakCount;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score Streak")
+	float BaseScore;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(BlueprintReadOnly, Category = "Score Streak")
+	float CurrentScore;
 
 private:
 
@@ -63,6 +73,9 @@ private:
 
 private:
 
-	void UpdateScoreStreak(int32& StreakValue, float& TimeValue, float DeltaTime);
+	void UpdateScoreStreak(EColorTypes ColorType, int32 Amount = 1, float NewTime = 5.0f);
+	void CancelScoreStreak(EColorTypes ColorType);
+
+	void UpdateStreakTime(int32& StreakValue, float& TimeValue, float DeltaTime);
 
 };

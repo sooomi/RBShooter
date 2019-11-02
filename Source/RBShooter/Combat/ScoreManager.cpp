@@ -2,13 +2,13 @@
 
 
 #include "ScoreManager.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Player/PlayerCharacter.h"
+#include "Enemy/Enemy.h"
 
 // Sets default values
-AScoreManager::AScoreManager()
+UScoreManager::UScoreManager()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 	ScoreStreakRed = 0;
 	ScoreStreakBlue = 0;
 
@@ -16,16 +16,65 @@ AScoreManager::AScoreManager()
 	ScoreStreakTimeBlue = 0.0f;
 
 	MaxScoreStreakCount = 5;
+	CurrentScore = 0.0f;
+	BaseScore = 1.0f;
 }
 
-// Called when the game starts or when spawned
-void AScoreManager::BeginPlay()
+void UScoreManager::UpdateScoreTimer(float DeltaTime)
 {
-	Super::BeginPlay();
-
+	UpdateStreakTime(ScoreStreakRed, ScoreStreakTimeRed, DeltaTime);
+	UpdateStreakTime(ScoreStreakBlue, ScoreStreakTimeBlue, DeltaTime);
 }
 
-float AScoreManager::GetScoreStreakAmountFraction(EColorTypes ColorType)
+void UScoreManager::HandleEnemyDeath(AEnemy* Enemy, AActor* Killer)
+{
+	APlayerCharacter* Player = Cast<APlayerCharacter>(Killer);
+	if (Player)
+	{
+		if (Enemy->EnemyType == EColorTypes::CT_Red)
+		{
+			CancelScoreStreak(EColorTypes::CT_Blue);
+		}
+		else if (Enemy->EnemyType == EColorTypes::CT_Blue)
+		{
+			CancelScoreStreak(EColorTypes::CT_Red);
+		}
+
+		UpdateScoreStreak(Enemy->EnemyType, 1, 5.0f);
+	}
+}
+
+void UScoreManager::HandleDamageDealt(float Damage, AActor* DamageTarget, EEnemyHitTypes HitLocation)
+{
+	AEnemy* Enemy = Cast<AEnemy>(DamageTarget);
+	if (DamageTarget)
+	{
+		float ScoreMultiplier = 1.0f;
+
+		switch (HitLocation)
+		{
+		case EEnemyHitTypes::EHT_Head:
+			ScoreMultiplier = 2.0f;
+			break;
+		case EEnemyHitTypes::EHT_Chest:
+			ScoreMultiplier = 1.0f;
+			break;
+		case EEnemyHitTypes::EHT_LegLeft:
+			ScoreMultiplier = 1.5f;
+			break;
+		case EEnemyHitTypes::EHT_LegRight:
+			ScoreMultiplier = 1.5f;
+			break;
+		}
+
+		float ScoreIncrease = (Damage * ScoreMultiplier) * BaseScore * GetScoreStreakMultiplier(Enemy->EnemyType);
+
+		CurrentScore += ScoreIncrease;
+		OnScoreChanged.Broadcast(CurrentScore, Enemy);
+	}
+}
+
+float UScoreManager::GetScoreStreakAmountFraction(EColorTypes ColorType)
 {
 	if (ColorType == EColorTypes::CT_Red)
 	{
@@ -39,7 +88,7 @@ float AScoreManager::GetScoreStreakAmountFraction(EColorTypes ColorType)
 	return 0.0f;
 }
 
-int32 AScoreManager::GetScoreStreak(EColorTypes ColorType)
+int32 UScoreManager::GetScoreStreak(EColorTypes ColorType)
 {
 	if (ColorType == EColorTypes::CT_Red)
 	{
@@ -54,7 +103,7 @@ int32 AScoreManager::GetScoreStreak(EColorTypes ColorType)
 	return 0;
 }
 
-bool AScoreManager::IsScoreStreakActive(EColorTypes ColorType)
+bool UScoreManager::IsScoreStreakActive(EColorTypes ColorType)
 {
 	if (ColorType == EColorTypes::CT_Red)
 	{
@@ -68,7 +117,15 @@ bool AScoreManager::IsScoreStreakActive(EColorTypes ColorType)
 	return false;
 }
 
-void AScoreManager::UpdateScoreStreak(EColorTypes ColorType, int32 Amount /* = 1*/, float NewTime /* = 5.0f*/)
+float UScoreManager::GetScoreStreakMultiplier(EColorTypes ColorType)
+{
+	float ScoreStreakCount = (float)FMath::Min(GetScoreStreak(ColorType) - 1, 0);
+	float ScoreStreakMultiplier = 1.0f + (0.2f * ScoreStreakCount);
+
+	return ScoreStreakMultiplier;
+}
+
+void UScoreManager::UpdateScoreStreak(EColorTypes ColorType, int32 Amount /* = 1*/, float NewTime /* = 5.0f*/)
 {
 	bool bWasStreakStarted = false;
 
@@ -97,7 +154,7 @@ void AScoreManager::UpdateScoreStreak(EColorTypes ColorType, int32 Amount /* = 1
 	OnScoreStreakUpdated(ColorType, Amount, NewTime, bWasStreakStarted);
 }
 
-void AScoreManager::CancelScoreStreak(EColorTypes ColorType)
+void UScoreManager::CancelScoreStreak(EColorTypes ColorType)
 {
 	if (ColorType == EColorTypes::CT_Red)
 	{
@@ -111,16 +168,7 @@ void AScoreManager::CancelScoreStreak(EColorTypes ColorType)
 	}
 }
 
-// Called every frame
-void AScoreManager::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	UpdateScoreStreak(ScoreStreakRed, ScoreStreakTimeRed, DeltaTime);
-	UpdateScoreStreak(ScoreStreakBlue, ScoreStreakTimeBlue, DeltaTime);
-}
-
-void AScoreManager::UpdateScoreStreak(int32& StreakValue, float& TimeValue, float DeltaTime)
+void UScoreManager::UpdateStreakTime(int32& StreakValue, float& TimeValue, float DeltaTime)
 {
 	if (TimeValue > 0.0f)
 	{
