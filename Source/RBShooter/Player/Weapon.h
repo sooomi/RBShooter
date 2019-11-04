@@ -72,6 +72,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Fire")
 	float FireInterval;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Charging")
+	float MaxChargeDuration;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon Damage")
 	float CurrentChargeAmount;
 
@@ -100,9 +103,6 @@ public:
 	EColorTypes ProjectileTypeToFire;
 
 private: // Weapon charging
-
-	UPROPERTY(EditAnywhere, Category="Weapon Charging")
-	float MaxChargeDuration;
 
 	FTimerHandle ChargeTimerHandle;
 
