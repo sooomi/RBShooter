@@ -85,7 +85,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, DisplayName = "Number of Blue Timer Increases", Category = "Combat Values")
 	int32 NumBlueTimerIncreases;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat Values")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat Values")
 	float MaxTime;
 
 private:
