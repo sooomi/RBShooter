@@ -27,6 +27,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Timer Management")
 	int32 GetNumBombPoints(EColorTypes ColorType);
 
+	UFUNCTION(BlueprintPure, Category = "Timer Management")
+	float GetMaxTime(EColorTypes ColorType);
+
 	UFUNCTION(BlueprintPure, Category="Timer Management")
 	float GetTimeLeft(EColorTypes ColorType);
 
@@ -85,8 +88,11 @@ public:
 	UPROPERTY(BlueprintReadOnly, DisplayName = "Number of Blue Timer Increases", Category = "Combat Values")
 	int32 NumBlueTimerIncreases;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat Values")
-	float MaxTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Values")
+	float MaxTimeRed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat Values")
+	float MaxTimeBlue;
 
 private:
 

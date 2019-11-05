@@ -10,7 +10,8 @@ ACombatPowerManager::ACombatPowerManager()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	MaxTime = 10.0f;
+	MaxTimeRed = 10.0f;
+	MaxTimeBlue = 10.0f;
 	
 	NumRedBombPoints = 0;
 	NumBlueBombPoints = 0;
@@ -48,6 +49,20 @@ int32 ACombatPowerManager::GetNumBombPoints(EColorTypes ColorType)
 	return 0;
 }
 
+float ACombatPowerManager::GetMaxTime(EColorTypes ColorType)
+{
+	if (ColorType == EColorTypes::CT_Red)
+	{
+		return MaxTimeRed;
+	}
+	else if (ColorType == EColorTypes::CT_Blue)
+	{
+		return MaxTimeBlue;
+	}
+
+	return 0.0f;
+}
+
 float ACombatPowerManager::GetTimeLeft(EColorTypes ColorType)
 {
 	FTimerHandle& RelevantTimerHandle = GetTimerHandleFromColor(ColorType);
@@ -57,7 +72,7 @@ float ACombatPowerManager::GetTimeLeft(EColorTypes ColorType)
 
 	if (GetNumBombPoints(ColorType) >= MaxNumBombPoints)
 	{
-		return MaxTime;
+		return GetMaxTime(ColorType);
 	}
 
 	float TimeLeft = TimerRate - Elapsed;
@@ -69,7 +84,7 @@ float ACombatPowerManager::GetTimeLeftPercentage(EColorTypes ColorType)
 {
 	float TimeLeft = GetTimeLeft(ColorType);
 
-	float TimeLeftPercentage = TimeLeft / MaxTime;
+	float TimeLeftPercentage = TimeLeft / GetMaxTime(ColorType);
 
 	return TimeLeftPercentage;
 }
@@ -116,6 +131,7 @@ bool ACombatPowerManager::IncreaseTimer(float Amount, EColorTypes ColorType)
 	float NewTime = (TimerRate - Elapsed) + Amount;
 
 	// If new time exceeds max time, deduct MaxTime and add one bomb point
+	float MaxTime = GetMaxTime(ColorType);
 	if (NewTime >= MaxTime)
 	{
 		NewTime -= MaxTime;
