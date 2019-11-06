@@ -127,5 +127,5 @@ public:
 	static void SetFloat(UPARAM(ref) FColorFloatGroup& ColorFloatGroupObject, float Value = 1.0f, EColorTypes ColorType = EColorTypes::CT_None);
 
 	UFUNCTION(BlueprintCallable, Category = "ColorFloatGroup")
-	float GetFloat(UPARAM(ref) FColorFloatGroup& ColorFloatGroupObject, EColorTypes ColorType);
+	static float GetFloat(UPARAM(ref) FColorFloatGroup& ColorFloatGroupObject, EColorTypes ColorType);
 };

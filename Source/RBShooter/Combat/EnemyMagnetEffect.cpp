@@ -66,4 +66,3 @@ void AEnemyMagnetEffect::AttractFromSphere(USphereComponent* SphereComponent, fl
 		}
 	}
 }
-

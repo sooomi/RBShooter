@@ -10,7 +10,7 @@
 class AEnemy;
 class APlayerCharacter;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FScoreChangedDelegate, float, Score, AEnemy*, Enemy);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FScoreChangedDelegate, float, CurrentScore, float, ScoreIncrease, EEnemyHitTypes, HitLocation, AEnemy*, Enemy);
 
 UCLASS()
 class RBSHOOTER_API UScoreManager : public UObject

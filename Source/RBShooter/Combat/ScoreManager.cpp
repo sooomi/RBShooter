@@ -85,28 +85,29 @@ void UScoreManager::HandleDamageDealt(float Damage, AActor* DamageTarget, EEnemy
 	AEnemy* Enemy = Cast<AEnemy>(DamageTarget);
 	if (DamageTarget)
 	{
-		float ScoreMultiplier = 1.0f;
+		float HitLocationMultiplier = 1.0f;
 
 		switch (HitLocation)
 		{
 		case EEnemyHitTypes::EHT_Head:
-			ScoreMultiplier = 2.0f;
+			HitLocationMultiplier = 2.0f;
 			break;
 		case EEnemyHitTypes::EHT_Chest:
-			ScoreMultiplier = 1.0f;
+			HitLocationMultiplier = 1.0f;
 			break;
 		case EEnemyHitTypes::EHT_LegLeft:
-			ScoreMultiplier = 1.5f;
+			HitLocationMultiplier = 1.5f;
 			break;
 		case EEnemyHitTypes::EHT_LegRight:
-			ScoreMultiplier = 1.5f;
+			HitLocationMultiplier = 1.5f;
 			break;
 		}
 
-		float ScoreIncrease = (Damage * ScoreMultiplier) * BaseScore * GetScoreStreakMultiplier(Enemy->EnemyType);
+		float TierMultiplier = FMath::Max(UGameUtility::GetFloat(ScoreTierBonus, Enemy->EnemyType), 1.0f);
+		float ScoreIncrease = BaseScore * ((Damage * HitLocationMultiplier) * GetScoreStreakMultiplier(Enemy->EnemyType) * TierMultiplier);
 
 		CurrentScore += ScoreIncrease;
-		OnScoreChanged.Broadcast(CurrentScore, Enemy);
+		OnScoreChanged.Broadcast(CurrentScore, ScoreIncrease, HitLocation, Enemy);
 	}
 }
 

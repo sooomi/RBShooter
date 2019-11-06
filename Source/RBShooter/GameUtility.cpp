@@ -81,10 +81,8 @@ float UGameUtility::GetFloat(UPARAM(ref)FColorFloatGroup& ColorFloatGroupObject,
 	{
 	case EColorTypes::CT_Red:
 		return ColorFloatGroupObject.Red;
-		break;
 	case EColorTypes::CT_Blue:
 		return ColorFloatGroupObject.Blue;
-		break;
 	}
 
 	return 0.0f;
