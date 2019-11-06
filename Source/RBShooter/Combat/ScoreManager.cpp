@@ -119,7 +119,7 @@ bool UScoreManager::IsScoreStreakActive(EColorTypes ColorType)
 
 float UScoreManager::GetScoreStreakMultiplier(EColorTypes ColorType)
 {
-	float ScoreStreakCount = (float)FMath::Min(GetScoreStreak(ColorType) - 1, 0);
+	float ScoreStreakCount = (float)FMath::Max(GetScoreStreak(ColorType) - 1, 0);
 	float ScoreStreakMultiplier = 1.0f + (0.2f * ScoreStreakCount);
 
 	return ScoreStreakMultiplier;
