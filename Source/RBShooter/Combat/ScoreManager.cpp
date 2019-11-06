@@ -5,6 +5,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Player/PlayerCharacter.h"
 #include "Enemy/Enemy.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 // Sets default values
 UScoreManager::UScoreManager()
@@ -12,18 +14,52 @@ UScoreManager::UScoreManager()
 	ScoreStreakRed = 0;
 	ScoreStreakBlue = 0;
 
-	ScoreStreakTimeRed = 0.0f;
-	ScoreStreakTimeBlue = 0.0f;
+	ScoreStreakTime.Red = 0.0f;
+	ScoreStreakTime.Blue = 0.0f;
 
 	MaxScoreStreakCount = 5;
 	CurrentScore = 0.0f;
 	BaseScore = 1.0f;
 }
 
+void UScoreManager::ActivateTierBonus(EColorTypes ColorType, EPowerTiesTypes PowerTier, float IncreasePerTier, float BonusDuration)
+{
+	float TierMultiplier = 0.0f;
+
+	switch (PowerTier)
+	{
+	case EPowerTiesTypes::PTT_Tier1:
+		TierMultiplier = 1.0f;
+		break;
+	case EPowerTiesTypes::PTT_Tier2:
+		TierMultiplier = 2.0f;
+		break;
+	case EPowerTiesTypes::PTT_Tier3:
+		TierMultiplier = 3.0f;
+		break;
+	}
+
+	float FinalMultiplier = 1.0f + (IncreasePerTier * TierMultiplier);
+
+	if (ColorType == EColorTypes::CT_Red)
+	{
+		ScoreTierBonus.Red = FinalMultiplier;
+	}
+	else if (ColorType == EColorTypes::CT_Blue)
+	{
+		ScoreTierBonus.Blue = FinalMultiplier;
+	}
+
+	FTimerDelegate TimerDel;
+	TimerDel.BindUFunction(this, FName("ScoreTierBonusUpdate"), ColorType);
+	
+	GetWorld()->GetTimerManager().SetTimer(ScoreTierBonusTimerHandle, TimerDel, BonusDuration, false, -1.0f);
+}
+
 void UScoreManager::UpdateScoreTimer(float DeltaTime)
 {
-	UpdateStreakTime(ScoreStreakRed, ScoreStreakTimeRed, DeltaTime);
-	UpdateStreakTime(ScoreStreakBlue, ScoreStreakTimeBlue, DeltaTime);
+	UpdateStreakTime(ScoreStreakRed, ScoreStreakTime.Red, DeltaTime);
+	UpdateStreakTime(ScoreStreakBlue, ScoreStreakTime.Blue, DeltaTime);
 }
 
 void UScoreManager::HandleEnemyDeath(AEnemy* Enemy, AActor* Killer)
@@ -107,11 +143,11 @@ bool UScoreManager::IsScoreStreakActive(EColorTypes ColorType)
 {
 	if (ColorType == EColorTypes::CT_Red)
 	{
-		return ScoreStreakTimeRed > 0.0f;
+		return ScoreStreakTime.Red > 0.0f;
 	}
 	else if (ColorType == EColorTypes::CT_Blue)
 	{
-		return ScoreStreakTimeBlue > 0.0f;
+		return ScoreStreakTime.Blue > 0.0f;
 	}
 
 	return false;
@@ -131,24 +167,24 @@ void UScoreManager::UpdateScoreStreak(EColorTypes ColorType, int32 Amount /* = 1
 
 	if (ColorType == EColorTypes::CT_Red)
 	{
-		if (ScoreStreakTimeRed <= 0.0f)
+		if (ScoreStreakTime.Red <= 0.0f)
 		{
 			bWasStreakStarted = true;
 		}
 
 		ScoreStreakRed = FMath::Clamp(ScoreStreakRed += Amount, 0, MaxScoreStreakCount);
-		ScoreStreakTimeRed = NewTime;
+		ScoreStreakTime.Red = NewTime;
 		
 	}
 	else if (ColorType == EColorTypes::CT_Blue)
 	{
-		if (ScoreStreakTimeBlue <= 0.0f)
+		if (ScoreStreakTime.Blue <= 0.0f)
 		{
 			bWasStreakStarted = true;
 		}
 
 		ScoreStreakBlue = FMath::Clamp(ScoreStreakBlue += Amount, 0, MaxScoreStreakCount);
-		ScoreStreakTimeBlue = NewTime;
+		ScoreStreakTime.Blue = NewTime;
 	}
 
 	OnScoreStreakUpdated(ColorType, Amount, NewTime, bWasStreakStarted);
@@ -158,12 +194,12 @@ void UScoreManager::CancelScoreStreak(EColorTypes ColorType)
 {
 	if (ColorType == EColorTypes::CT_Red)
 	{
-		ScoreStreakTimeRed = 0.0f;
+		ScoreStreakTime.Red = 0.0f;
 		ScoreStreakRed = 0;
 	}
 	else if (ColorType == EColorTypes::CT_Blue)
 	{
-		ScoreStreakTimeBlue = 0.0f;
+		ScoreStreakTime.Blue = 0.0f;
 		ScoreStreakBlue = 0;
 	}
 }
@@ -179,6 +215,18 @@ void UScoreManager::UpdateStreakTime(int32& StreakValue, float& TimeValue, float
 			TimeValue = 0.0f;
 			StreakValue = 0;
 		}
+	}
+}
+
+void UScoreManager::ScoreTierBonusUpdate(EColorTypes ColorType)
+{
+	if (ColorType == EColorTypes::CT_Red)
+	{
+		ScoreTierBonus.Red = 0.0f;
+	}
+	else if (ColorType == EColorTypes::CT_Blue)
+	{
+		ScoreTierBonus.Blue = 0.0f;
 	}
 }
 

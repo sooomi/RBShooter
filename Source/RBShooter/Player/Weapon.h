@@ -5,16 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Combat/ProjectileBase.h"
+#include "GameUtility.h"
 #include "Weapon.generated.h"
-
-UENUM(BlueprintType)
-enum class EPowerTiesTypes : uint8
-{
-	PTT_TierNone UMETA(DisplayName = "No Tier"),
-	PTT_Tier1 UMETA(DisplayName = "Magnet Projectile"),
-	PTT_Tier2 UMETA(DisplayName = "Magnet Grenade"),
-	PTT_Tier3 UMETA(DisplayName = "Board Clear")
-};
 
 class APlayerCharacter;
 

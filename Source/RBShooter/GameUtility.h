@@ -24,6 +24,15 @@ enum class EEnemyHitTypes : uint8
 	EHT_LegRight UMETA(DisplayName = "LegRight")
 };
 
+UENUM(BlueprintType)
+enum class EPowerTiesTypes : uint8
+{
+	PTT_TierNone UMETA(DisplayName = "No Tier"),
+	PTT_Tier1 UMETA(DisplayName = "Magnet Projectile"),
+	PTT_Tier2 UMETA(DisplayName = "Magnet Grenade"),
+	PTT_Tier3 UMETA(DisplayName = "Board Clear")
+};
+
 
 USTRUCT(BlueprintType)
 struct FKillCount
@@ -69,6 +78,24 @@ struct FWeaponColorAttribute
 	float ValueGlobal;
 };
 
+USTRUCT(BlueprintType)
+struct FColorFloatGroup
+{
+	GENERATED_BODY()
+
+	FColorFloatGroup()
+	{
+		Red = 0.0f;
+		Blue = 0.0f;
+	}
+
+	UPROPERTY(BlueprintReadOnly, Category = "FColorFloatGroup")
+	float Red;
+
+	UPROPERTY(BlueprintReadOnly, Category = "FColorFloatGroup")
+	float Blue;
+};
+
 /**
  * 
  */
@@ -92,6 +119,13 @@ public:
 
 	/* FWeaponColorAttribute Functions */
 
-	UFUNCTION(BlueprintCallable, Category = "Projectile Multiplier")
+	UFUNCTION(BlueprintCallable, Category = "WeaponColorAttribute")
 	static void SetValue(UPARAM(ref) FWeaponColorAttribute& WeaponColorAttributeObject, float Value = 1.0f, EColorTypes ColorType = EColorTypes::CT_None);
+
+	/* FColorFloatGroup Functions */
+	UFUNCTION(BlueprintCallable, Category = "ColorFloatGroup")
+	static void SetFloat(UPARAM(ref) FColorFloatGroup& ColorFloatGroupObject, float Value = 1.0f, EColorTypes ColorType = EColorTypes::CT_None);
+
+	UFUNCTION(BlueprintCallable, Category = "ColorFloatGroup")
+	float GetFloat(UPARAM(ref) FColorFloatGroup& ColorFloatGroupObject, EColorTypes ColorType);
 };

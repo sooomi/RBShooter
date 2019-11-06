@@ -61,3 +61,31 @@ void UGameUtility::SetValue(UPARAM(ref)FWeaponColorAttribute& WeaponColorAttribu
 		break;
 	}
 }
+
+void UGameUtility::SetFloat(UPARAM(ref)FColorFloatGroup& ColorFloatGroupObject, float Value, EColorTypes ColorType)
+{
+	switch (ColorType)
+	{
+	case EColorTypes::CT_Red:
+		ColorFloatGroupObject.Red = Value;
+		break;
+	case EColorTypes::CT_Blue:
+		ColorFloatGroupObject.Blue = Value;
+		break;
+	}
+}
+
+float UGameUtility::GetFloat(UPARAM(ref)FColorFloatGroup& ColorFloatGroupObject, EColorTypes ColorType)
+{
+	switch (ColorType)
+	{
+	case EColorTypes::CT_Red:
+		return ColorFloatGroupObject.Red;
+		break;
+	case EColorTypes::CT_Blue:
+		return ColorFloatGroupObject.Blue;
+		break;
+	}
+
+	return 0.0f;
+}

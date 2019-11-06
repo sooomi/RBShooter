@@ -21,6 +21,9 @@ public:
 	// Sets default values for this actor's properties
 	UScoreManager();
 
+	UFUNCTION(BlueprintCallable, Category="Score Tier Bonus")
+	void ActivateTierBonus(EColorTypes ColorType, EPowerTiesTypes PowerTier, float IncreasePerTier, float BonusDuration);
+
 	UFUNCTION(BlueprintCallable, Category = "Score BlueprintImplement")
 	void UpdateScoreTimer(float DeltaTime);
 
@@ -68,8 +71,10 @@ private:
 	int32 ScoreStreakRed;
 	int32 ScoreStreakBlue;
 
-	float ScoreStreakTimeRed;
-	float ScoreStreakTimeBlue;
+	FColorFloatGroup ScoreStreakTime;
+	FColorFloatGroup ScoreTierBonus;
+
+	FTimerHandle ScoreTierBonusTimerHandle;
 
 private:
 
@@ -77,5 +82,8 @@ private:
 	void CancelScoreStreak(EColorTypes ColorType);
 
 	void UpdateStreakTime(int32& StreakValue, float& TimeValue, float DeltaTime);
+
+	UFUNCTION()
+	void ScoreTierBonusUpdate(EColorTypes ColorType);
 
 };
