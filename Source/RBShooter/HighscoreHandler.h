@@ -19,6 +19,11 @@ public:
 	UHighscoreHandler();
 	~UHighscoreHandler();
 
+public:
+
+	UPROPERTY(EditAnywhere, Category="HighScore")
+	uint32 MaxHighScoreEntries;
+
 private:
 
 	TArray<uint32> ScoreValues;
