@@ -65,11 +65,11 @@ public:
 
 	/* Called when a Bomb Point is added. */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Timer Callbacks")
-	void OnBombPointAdded(EColorTypes ColorType, UPARAM(DisplayName = "Number of Bomb Points") int32 NumPoints);
+	void OnBombPointAdded(EColorTypes ColorType, UPARAM(DisplayName = "Current Number of Bomb Points") int32 NumPointsNow, UPARAM(DisplayName = "Previous Number of Bomb Points") int32 NumPointsBefore);
 
 	/* Called when a Bomb Point is removed. */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Timer Callbacks")
-	void OnBombPointRemoved(EColorTypes ColorType, UPARAM(DisplayName = "Number of Bomb Points") int32 NumPoints);
+	void OnBombPointRemoved(EColorTypes ColorType, UPARAM(DisplayName = "Current Number of Bomb Points") int32 NumPointsNow, UPARAM(DisplayName = "Previous Number of Bomb Points") int32 NumPointsBefore);
 
 public:
 

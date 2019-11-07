@@ -236,8 +236,9 @@ bool ACombatPowerManager::AddBombPointInternal(EColorTypes ColorType, int32 Amou
 	int32& PointValue = GetPointValueFromColor(ColorType);
 	if (PointValue < MaxNumBombPoints)
 	{
+		int32 PointValueBefore = PointValue;
 		PointValue = FMath::Clamp(PointValue += Amount, 0, MaxNumBombPoints);
-		OnBombPointAdded(ColorType, PointValue);
+		OnBombPointAdded(ColorType, PointValue, PointValueBefore);
 
 		return true;
 	}
@@ -258,7 +259,7 @@ bool ACombatPowerManager::RemoveBombPointInternal(EColorTypes ColorType, int32 A
 	{
 		int32 PointValueBefore = PointValue;
 		PointValue = FMath::Clamp(PointValue -= Amount, 0, MaxNumBombPoints);
-		OnBombPointRemoved(ColorType, PointValueBefore);
+		OnBombPointRemoved(ColorType, PointValue, PointValueBefore);
 
 		return true;
 	}
