@@ -5,7 +5,11 @@
 
 UHighscoreHandler::UHighscoreHandler()
 {
-	
+	MaxHighScoreEntries = 5;
+
+	ScoreValues.SetNumZeroed(MaxHighScoreEntries);
+
+	UE_LOG(LogTemp, Warning, TEXT("scorevalues size %i"), ScoreValues.Num());
 }
 
 UHighscoreHandler::~UHighscoreHandler()
