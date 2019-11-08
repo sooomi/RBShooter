@@ -4,26 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "HighscoreSaveGame.h"
+#include "GameUtility.h"
 #include "HighscoreHandler.generated.h"
-
-
-USTRUCT(BlueprintType)
-struct FHighScoreEntry
-{
-	GENERATED_BODY()
-
-	FHighScoreEntry()
-	{
-		Value = 0;
-		PlayerName = "Empty";
-	}
-
-	UPROPERTY(BlueprintReadOnly, Category = "FHighScoreEntry")
-	int32 Value;
-
-	UPROPERTY(BlueprintReadOnly, Category = "FHighScoreEntry")
-	FName PlayerName;
-};
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FScorePostedDelegate, int32, Placement, FHighScoreEntry, ScoreEntry);
 
@@ -40,6 +23,9 @@ public:
 	UHighscoreHandler();
 	~UHighscoreHandler();
 
+	void Load();
+	void Save();
+
 public:
 
 	/* Checks if ScoreValue qualifies to be on the score board. @return Placement on the board if qualified, starting from 0. -1 if not qualified. */
@@ -52,6 +38,12 @@ public:
 
 public:
 
+	UPROPERTY(VisibleAnywhere, Category = "Basic")
+	FString SaveSlotName;
+
+	UPROPERTY(VisibleAnywhere, Category = "Basic")
+	uint32 UserIndex;
+
 	UPROPERTY(EditAnywhere, Category="HighScore")
 	int32 MaxHighScoreEntries;
 
@@ -62,6 +54,8 @@ public:
 	FScorePostedDelegate OnScorePosted;
 
 private:
+
+	UHighscoreSaveGame* SaveGameInstance;
 
 	void PushScoreEntriesDown(int32 StartingIndex, int32 Amount);
 	

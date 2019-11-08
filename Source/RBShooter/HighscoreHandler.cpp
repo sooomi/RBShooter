@@ -2,9 +2,14 @@
 
 
 #include "HighscoreHandler.h"
+#include "Kismet/GameplayStatics.h"
 
 UHighscoreHandler::UHighscoreHandler()
 {
+	SaveGameInstance = nullptr;
+	SaveSlotName = TEXT("HighScoreList");
+	UserIndex = 0;
+
 	MaxHighScoreEntries = 5;
 
 	ScoreEntries.SetNum(MaxHighScoreEntries);
@@ -12,6 +17,29 @@ UHighscoreHandler::UHighscoreHandler()
 
 UHighscoreHandler::~UHighscoreHandler()
 {
+}
+
+void UHighscoreHandler::Load()
+{
+	// Check if instance exists
+	SaveGameInstance = Cast<UHighscoreSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserIndex));
+
+	if (SaveGameInstance)
+	{
+		ScoreEntries = SaveGameInstance->HighScoreList;
+	}
+}
+
+void UHighscoreHandler::Save()
+{
+	SaveGameInstance = Cast<UHighscoreSaveGame>(UGameplayStatics::CreateSaveGameObject(UHighscoreSaveGame::StaticClass()));
+
+	if (SaveGameInstance)
+	{
+		SaveGameInstance->HighScoreList = ScoreEntries;
+
+		UGameplayStatics::AsyncSaveGameToSlot(SaveGameInstance, SaveSlotName, UserIndex);
+	}
 }
 
 int32 UHighscoreHandler::CheckHighScoreEligibility(int32 ScoreValue)
@@ -40,6 +68,8 @@ void UHighscoreHandler::PostScore(int32 ScoreValue, const FName& PlayerName)
 		ScoreEntries[ScoreEligibility].PlayerName = PlayerName;
 
 		OnScorePosted.Broadcast(ScoreEligibility, ScoreEntries[ScoreEligibility]);
+
+		Save();
 	}
 }
 

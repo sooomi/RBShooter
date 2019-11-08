@@ -18,4 +18,5 @@ void URBShooterGameInstance::Init()
 	UGameInstance::Init();
 
 	HighScoreHandler = NewObject<UHighscoreHandler>(this, UHighscoreHandler::StaticClass());
+	HighScoreHandler->Load();
 }

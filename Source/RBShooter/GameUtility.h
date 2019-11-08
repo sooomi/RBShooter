@@ -35,6 +35,24 @@ enum class EPowerTiesTypes : uint8
 
 
 USTRUCT(BlueprintType)
+struct FHighScoreEntry
+{
+	GENERATED_BODY()
+
+	FHighScoreEntry()
+	{
+		Value = 0;
+		PlayerName = "Empty";
+	}
+
+	UPROPERTY(BlueprintReadOnly, Category = "FHighScoreEntry")
+	int32 Value;
+
+	UPROPERTY(BlueprintReadOnly, Category = "FHighScoreEntry")
+	FName PlayerName;
+};
+
+USTRUCT(BlueprintType)
 struct FKillCount
 {
 	GENERATED_BODY()
