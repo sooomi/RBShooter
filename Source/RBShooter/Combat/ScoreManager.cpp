@@ -32,10 +32,10 @@ void UScoreManager::ActivateTierBonus(EColorTypes ColorType, EPowerTiesTypes Pow
 		TierMultiplier = 1.0f;
 		break;
 	case EPowerTiesTypes::PTT_Tier2:
-		TierMultiplier = 2.0f;
+		TierMultiplier = 1.5f;
 		break;
 	case EPowerTiesTypes::PTT_Tier3:
-		TierMultiplier = 3.0f;
+		TierMultiplier = 2.0f;
 		break;
 	}
 
@@ -62,7 +62,7 @@ void UScoreManager::UpdateScoreTimer(float DeltaTime)
 	UpdateStreakTime(ScoreStreakBlue, ScoreStreakTime.Blue, DeltaTime);
 }
 
-void UScoreManager::HandleEnemyDeath(AEnemy* Enemy, AActor* Killer)
+void UScoreManager::HandleEnemyDeath(AEnemy* Enemy, EEnemyHitTypes EnemyHitLocation, AActor* Killer)
 {
 	APlayerCharacter* Player = Cast<APlayerCharacter>(Killer);
 	if (Player)

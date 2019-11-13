@@ -28,7 +28,7 @@ public:
 	void UpdateScoreTimer(float DeltaTime);
 
 	UFUNCTION(BlueprintCallable, Category="Score BlueprintImplement")
-	void HandleEnemyDeath(AEnemy* Enemy, AActor* Killer);
+	void HandleEnemyDeath(AEnemy* Enemy, EEnemyHitTypes EnemyHitLocation, AActor* Killer);
 
 	UFUNCTION(BlueprintCallable, Category="Score BlueprintImplement")
 	void HandleDamageDealt(float Damage, AActor* DamageTarget, EEnemyHitTypes HitLocation);
